@@ -94,14 +94,10 @@ public class FileMemberRepository implements MemberRepository {
 	}
 
 	private void initializeSequence() {
-		if (store.isEmpty()) {
-			sequence = 1L;
-		} else {
-			Long maxId = store.keySet().stream()
-				.max(Long::compareTo)
-				.orElse(0L);
-			sequence = maxId + 1;
-		}
+		sequence = store.keySet().stream()
+			.max(Long::compareTo)
+			.map(maxId -> maxId + 1)
+			.orElse(1L);
 	}
 
 	private void saveToFile() {
