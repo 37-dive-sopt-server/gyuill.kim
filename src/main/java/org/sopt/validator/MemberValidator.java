@@ -42,9 +42,18 @@ public class MemberValidator {
 			throw new IllegalArgumentException("이메일을 입력해주세요.");
 		}
 
+		if (!isValidEmailFormat(email)) {
+			throw new IllegalArgumentException("유효하지 않은 이메일 형식입니다.");
+		}
+
 		if (emailExistsChecker.apply(email)) {
 			throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
 		}
+	}
+
+	private boolean isValidEmailFormat(String email) {
+		String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
+		return email.matches(emailRegex);
 	}
 
 	public Gender validateAndParseGender(String genderChoice) {
