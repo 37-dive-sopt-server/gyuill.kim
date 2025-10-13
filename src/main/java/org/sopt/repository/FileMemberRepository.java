@@ -83,6 +83,11 @@ public class FileMemberRepository implements MemberRepository {
 					store.put(member.id(), member);
 				}
 			}
+		} catch (com.google.gson.JsonSyntaxException e) {
+			// JSON 파싱 실패 시 - 파일 손상됨
+			System.err.println("[경고] 데이터 파일이 손상되었습니다. 빈 상태로 시작합니다.");
+			System.err.println("손상된 파일: " + filePath);
+			// 빈 store로 시작 (이미 초기화됨)
 		} catch (IOException e) {
 			throw new RuntimeException("파일을 읽는 중 오류가 발생했습니다: " + filePath, e);
 		}
