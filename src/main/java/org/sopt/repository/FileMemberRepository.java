@@ -1,8 +1,6 @@
 package org.sopt.repository;
 
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,20 +11,24 @@ import java.util.Optional;
 import org.sopt.domain.Member;
 import org.sopt.exception.DataAccessException;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 public class FileMemberRepository implements MemberRepository {
 
 	private final Map<Long, Member> store = new HashMap<>();
 	private final String filePath;
-	private final Gson gson;
+	private final ObjectMapper objectMapper;
 	private long sequence = 1L;
 
 	public FileMemberRepository(String filePath) {
 		this.filePath = filePath;
-		this.gson = new GsonBuilder().setPrettyPrinting().create();
+		this.objectMapper = new ObjectMapper();
+		this.objectMapper.registerModule(new JavaTimeModule());
+		this.objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
 		loadFromFile();
 		initializeSequence();
 	}
@@ -77,18 +79,16 @@ public class FileMemberRepository implements MemberRepository {
 			return;
 		}
 
-		try (FileReader reader = new FileReader(file)) {
-			List<Member> members = gson.fromJson(reader, new TypeToken<List<Member>>() {}.getType());
+		try {
+			List<Member> members = objectMapper.readValue(file, new TypeReference<List<Member>>() {});
 			if (members != null) {
 				for (Member member : members) {
 					store.put(member.id(), member);
 				}
 			}
-		} catch (com.google.gson.JsonSyntaxException e) {
-			// JSON 파싱 실패 시 - 파일 손상됨
+		} catch (JsonProcessingException e) {
 			System.err.println("[경고] 데이터 파일이 손상되었습니다. 빈 상태로 시작합니다.");
 			System.err.println("손상된 파일: " + filePath);
-			// 빈 store로 시작 (이미 초기화됨)
 		} catch (IOException e) {
 			throw new DataAccessException("파일을 읽는 중 오류가 발생했습니다: " + filePath, e);
 		}
@@ -109,9 +109,9 @@ public class FileMemberRepository implements MemberRepository {
 			parentDir.mkdirs();
 		}
 
-		try (FileWriter writer = new FileWriter(file)) {
+		try {
 			List<Member> members = new ArrayList<>(store.values());
-			gson.toJson(members, writer);
+			objectMapper.writeValue(file, members);
 		} catch (IOException e) {
 			throw new DataAccessException("파일을 저장하는 중 오류가 발생했습니다: " + filePath, e);
 		}
