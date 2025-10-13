@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.sopt.controller.MemberController;
 import org.sopt.domain.Gender;
 import org.sopt.domain.Member;
+import org.sopt.exception.DataAccessException;
 
 public class MemberConsoleView {
 	private final MemberController controller;
@@ -83,9 +84,9 @@ public class MemberConsoleView {
 			} else {
 				printErrorMessage("회원 등록 실패");
 			}
-		} catch (IllegalArgumentException e) {
+		} catch (IllegalArgumentException | IllegalStateException e) {
 			printWarningMessage(e.getMessage());
-		} catch (IllegalStateException e) {
+		} catch (DataAccessException e) {
 			printErrorMessage(e.getMessage());
 		}
 	}
@@ -100,16 +101,22 @@ public class MemberConsoleView {
 				printWarningMessage("해당 ID의 회원을 찾을 수 없습니다.");
 			}
 		} catch (IllegalArgumentException e) {
+			printWarningMessage(e.getMessage());
+		} catch (DataAccessException e) {
 			printErrorMessage(e.getMessage());
 		}
 	}
 
 	private void handleFindAllMembers() {
-		List<Member> allMembers = controller.getAllMembers();
-		if (allMembers.isEmpty()) {
-			printInfoMessage("등록된 회원이 없습니다.");
-		} else {
-			printMemberList(allMembers);
+		try {
+			List<Member> allMembers = controller.getAllMembers();
+			if (allMembers.isEmpty()) {
+				printInfoMessage("등록된 회원이 없습니다.");
+			} else {
+				printMemberList(allMembers);
+			}
+		} catch (DataAccessException e) {
+			printErrorMessage(e.getMessage());
 		}
 	}
 
@@ -124,6 +131,8 @@ public class MemberConsoleView {
 			}
 		} catch (IllegalArgumentException e) {
 			printWarningMessage(e.getMessage());
+		} catch (DataAccessException e) {
+			printErrorMessage(e.getMessage());
 		}
 	}
 

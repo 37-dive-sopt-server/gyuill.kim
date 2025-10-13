@@ -47,7 +47,7 @@ public class MemberValidator {
 		}
 
 		if (emailExistsChecker.apply(email)) {
-			throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
+			throw new IllegalStateException("이미 존재하는 이메일입니다.");
 		}
 	}
 

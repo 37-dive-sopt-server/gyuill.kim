@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.sopt.domain.Member;
+import org.sopt.exception.DataAccessException;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -89,7 +90,7 @@ public class FileMemberRepository implements MemberRepository {
 			System.err.println("손상된 파일: " + filePath);
 			// 빈 store로 시작 (이미 초기화됨)
 		} catch (IOException e) {
-			throw new RuntimeException("파일을 읽는 중 오류가 발생했습니다: " + filePath, e);
+			throw new DataAccessException("파일을 읽는 중 오류가 발생했습니다: " + filePath, e);
 		}
 	}
 
@@ -112,7 +113,7 @@ public class FileMemberRepository implements MemberRepository {
 			List<Member> members = new ArrayList<>(store.values());
 			gson.toJson(members, writer);
 		} catch (IOException e) {
-			throw new RuntimeException("파일을 저장하는 중 오류가 발생했습니다: " + filePath, e);
+			throw new DataAccessException("파일을 저장하는 중 오류가 발생했습니다: " + filePath, e);
 		}
 	}
 }
