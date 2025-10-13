@@ -18,6 +18,12 @@ public class MemberServiceImpl implements  MemberService {
 			throw new IllegalStateException("이미 존재하는 이메일입니다.");
 		}
 
+		int age = LocalDate.now().getYear() - birthDate.getYear();
+
+		if (age < 20) {
+			throw new IllegalStateException("20세 미만은 회원 가입이 불가능합니다.");
+		}
+
 		Member member = new Member(sequence++, name, birthDate, email, gender);
 		memberRepository.save(member);
 		return member.getId();
