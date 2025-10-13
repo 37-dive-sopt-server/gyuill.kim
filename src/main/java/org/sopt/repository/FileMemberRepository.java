@@ -87,8 +87,7 @@ public class FileMemberRepository implements MemberRepository {
 				}
 			}
 		} catch (JsonProcessingException e) {
-			System.err.println("[경고] 데이터 파일이 손상되었습니다. 빈 상태로 시작합니다.");
-			System.err.println("손상된 파일: " + filePath);
+			throw new DataAccessException("데이터 파일 형식이 올바르지 않습니다: " + filePath, e);
 		} catch (IOException e) {
 			throw new DataAccessException("파일을 읽는 중 오류가 발생했습니다: " + filePath, e);
 		}
