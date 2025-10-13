@@ -6,14 +6,14 @@ import java.util.Optional;
 
 import org.sopt.domain.Gender;
 import org.sopt.domain.Member;
-import org.sopt.repository.MemoryMemberRepository;
+import org.sopt.repository.MemberRepository;
 
 public class MemberServiceImpl implements  MemberService {
 
-	private final MemoryMemberRepository memberRepository;
+	private final MemberRepository memberRepository;
 	private static long sequence = 1L;
 
-	public MemberServiceImpl(MemoryMemberRepository memberRepository) {
+	public MemberServiceImpl(MemberRepository memberRepository) {
 		this.memberRepository = memberRepository;
 	}
 

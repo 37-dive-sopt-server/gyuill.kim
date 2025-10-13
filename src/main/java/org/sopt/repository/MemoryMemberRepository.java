@@ -8,13 +8,12 @@ import java.util.Optional;
 
 import org.sopt.domain.Member;
 
-public class MemoryMemberRepository {
+public class MemoryMemberRepository implements MemberRepository {
 
 	private static final Map<Long, Member> store = new HashMap<>();
 
-	public Member save(Member member) {
+	public void save(Member member) {
 		store.put(member.id(), member);
-		return member;
 	}
 
 
