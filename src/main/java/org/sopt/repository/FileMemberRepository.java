@@ -20,6 +20,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 public class FileMemberRepository implements MemberRepository {
 
 	private final Map<Long, Member> store = new HashMap<>();
+	private final Map<String, Member> emailIndex = new HashMap<>();
 	private final String filePath;
 	private final ObjectMapper objectMapper;
 	private long sequence = 1L;
@@ -41,6 +42,7 @@ public class FileMemberRepository implements MemberRepository {
 	@Override
 	public void save(Member member) {
 		store.put(member.id(), member);
+		emailIndex.put(member.email(), member);
 		saveToFile();
 	}
 
@@ -56,16 +58,16 @@ public class FileMemberRepository implements MemberRepository {
 
 	@Override
 	public Optional<Member> findByEmail(String email) {
-		return store.values().stream()
-			.filter(member -> member.email().equals(email))
-			.findFirst();
+		return Optional.ofNullable(emailIndex.get(email));
 	}
 
 	@Override
 	public boolean deleteByEmail(String email) {
 		Optional<Member> member = findByEmail(email);
 		if (member.isPresent()) {
-			store.remove(member.get().id());
+			Member m = member.get();
+			store.remove(m.id());
+			emailIndex.remove(m.email());
 			saveToFile();
 			return true;
 		}
@@ -84,6 +86,7 @@ public class FileMemberRepository implements MemberRepository {
 			if (members != null) {
 				for (Member member : members) {
 					store.put(member.id(), member);
+					emailIndex.put(member.email(), member);
 				}
 			}
 		} catch (JsonProcessingException e) {
