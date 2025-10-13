@@ -6,12 +6,15 @@ import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 
 import org.sopt.domain.Gender;
+import org.sopt.validator.MemberValidator;
 
 public class InputHandler {
 	private final Scanner scanner;
+	private final MemberValidator validator;
 
-	public InputHandler(Scanner scanner) {
+	public InputHandler(Scanner scanner, MemberValidator validator) {
 		this.scanner = scanner;
+		this.validator = validator;
 	}
 
 	public String readMenuChoice() {
@@ -38,17 +41,21 @@ public class InputHandler {
 		System.out.print("생년월일을 입력하세요 (YYYY-MM-DD): ");
 		String input = scanner.nextLine();
 		try {
-			return LocalDate.parse(input, DateTimeFormatter.ISO_LOCAL_DATE);
+			LocalDate birthDate = LocalDate.parse(input, DateTimeFormatter.ISO_LOCAL_DATE);
+			validator.validateAge(birthDate);
+			return birthDate;
 		} catch (DateTimeParseException e) {
 			throw new IllegalArgumentException("유효하지 않은 날짜 형식입니다. YYYY-MM-DD 형식으로 입력해주세요.");
 		}
 	}
 
 	public String readEmail() {
-		return readNonEmptyString(
+		String email = readNonEmptyString(
 			"이메일을 입력하세요: ",
 			"이메일을 입력해주세요."
 		);
+		validator.validateEmailDuplicate(email);
+		return email;
 	}
 
 	public Gender readGender() {
