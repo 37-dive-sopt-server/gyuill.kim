@@ -32,11 +32,11 @@ public class MemberConsoleView {
 	private void printMenu() {
 		System.out.println("\n✨ --- DIVE SOPT 회원 관리 서비스 --- ✨");
 		System.out.println("---------------------------------");
-		System.out.println("1️⃣. 회원 등록 ➕");
-		System.out.println("2️⃣. ID로 회원 조회 🔍");
-		System.out.println("3️⃣. 전체 회원 조회 📋");
-		System.out.println("4️⃣. 회원 삭제 🗑️");
-		System.out.println("5️⃣. 종료 🚪");
+		System.out.println("1. 회원 등록");
+		System.out.println("2. ID로 회원 조회");
+		System.out.println("3. 전체 회원 조회");
+		System.out.println("4. 회원 삭제");
+		System.out.println("5. 종료");
 		System.out.println("---------------------------------");
 		System.out.print("메뉴를 선택하세요: ");
 	}
@@ -127,19 +127,19 @@ public class MemberConsoleView {
 	}
 
 	private void printSuccessMessage(String message) {
-		System.out.println("✅ " + message);
+		System.out.println("[성공] " + message);
 	}
 
 	private void printWarningMessage(String message) {
-		System.out.println("⚠️ " + message);
+		System.out.println("[경고] " + message);
 	}
 
 	private void printErrorMessage(String message) {
-		System.out.println("❌ " + message);
+		System.out.println("[실패] " + message);
 	}
 
 	private void printInfoMessage(String message) {
-		System.out.println("ℹ️ " + message);
+		System.out.println("[정보] " + message);
 	}
 
 	private void printMemberInfo(Member member) {
