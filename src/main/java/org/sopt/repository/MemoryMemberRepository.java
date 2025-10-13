@@ -13,7 +13,7 @@ public class MemoryMemberRepository {
 	private static final Map<Long, Member> store = new HashMap<>();
 
 	public Member save(Member member) {
-		store.put(member.getId(), member);
+		store.put(member.id(), member);
 		return member;
 	}
 
@@ -29,14 +29,14 @@ public class MemoryMemberRepository {
 
 	public Optional<Member> findByEmail(String email) {
 		return store.values().stream()
-			.filter(member -> member.getEmail().equals(email))
+			.filter(member -> member.email().equals(email))
 			.findFirst();
 	}
 
 	public boolean deleteByEmail(String email) {
 		Optional<Member> member = findByEmail(email);
 		if (member.isPresent()) {
-			store.remove(member.get().getId());
+			store.remove(member.get().id());
 			return true;
 		}
 		return false;

@@ -20,7 +20,7 @@ public class MemberServiceImpl implements  MemberService {
 	public Long join(String name, LocalDate birthDate, String email, Gender gender) {
 		Member member = new Member(sequence++, name, birthDate, email, gender);
 		memberRepository.save(member);
-		return member.getId();
+		return member.id();
 	}
 
 	public Optional<Member> findOne(Long memberId) {

@@ -150,21 +150,21 @@ public class MemberConsoleView {
 
 	private void printMemberInfo(Member member) {
 		System.out.println("✅ 조회된 회원 정보:");
-		System.out.println("   ID: " + member.getId());
-		System.out.println("   이름: " + member.getName());
-		System.out.println("   생년월일: " + member.getBirthDate());
-		System.out.println("   이메일: " + member.getEmail());
-		System.out.println("   성별: " + member.getGender().getDescription());
+		System.out.println("   ID: " + member.id());
+		System.out.println("   이름: " + member.name());
+		System.out.println("   생년월일: " + member.birthDate());
+		System.out.println("   이메일: " + member.email());
+		System.out.println("   성별: " + member.gender().getDescription());
 	}
 
 	private void printMemberList(List<Member> members) {
 		System.out.println("--- 📋 전체 회원 목록 📋 ---");
 		for (Member member : members) {
-			System.out.println("👤 ID=" + member.getId() +
-				", 이름=" + member.getName() +
-				", 생년월일=" + member.getBirthDate() +
-				", 이메일=" + member.getEmail() +
-				", 성별=" + member.getGender().getDescription());
+			System.out.println("👤 ID=" + member.id() +
+				", 이름=" + member.name() +
+				", 생년월일=" + member.birthDate() +
+				", 이메일=" + member.email() +
+				", 성별=" + member.gender().getDescription());
 		}
 		System.out.println("--------------------------");
 	}
