@@ -105,6 +105,7 @@ public class FileMemberRepository implements MemberRepository {
 
 	private void saveToFile() {
 		File file = new File(filePath);
+		File tempFile = new File(filePath + ".tmp");
 		File parentDir = file.getParentFile();
 
 		if (parentDir != null && !parentDir.exists()) {
@@ -113,8 +114,17 @@ public class FileMemberRepository implements MemberRepository {
 
 		try {
 			List<Member> members = new ArrayList<>(store.values());
-			objectMapper.writeValue(file, members);
+			objectMapper.writeValue(tempFile, members);
+
+			// 원자적 교체
+			if (file.exists()) {
+				file.delete();
+			}
+			if (!tempFile.renameTo(file)) {
+				throw new IOException("임시 파일을 원본 파일로 이동할 수 없습니다");
+			}
 		} catch (IOException e) {
+			tempFile.delete(); // 실패 시 임시 파일 삭제
 			throw new DataAccessException("파일을 저장하는 중 오류가 발생했습니다: " + filePath, e);
 		}
 	}
