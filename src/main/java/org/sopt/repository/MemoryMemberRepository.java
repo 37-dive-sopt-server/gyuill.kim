@@ -23,22 +23,24 @@ public class MemoryMemberRepository implements MemberRepository {
 		store.put(member.id(), member);
 	}
 
-
+	@Override
 	public Optional<Member> findById(Long id) {
 		return Optional.ofNullable(store.get(id));
 	}
 
-
+	@Override
 	public List<Member> findAll() {
 		return new ArrayList<>(store.values());
 	}
 
+	@Override
 	public Optional<Member> findByEmail(String email) {
 		return store.values().stream()
 			.filter(member -> member.email().equals(email))
 			.findFirst();
 	}
 
+	@Override
 	public boolean deleteByEmail(String email) {
 		Optional<Member> member = findByEmail(email);
 		if (member.isPresent()) {
