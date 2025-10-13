@@ -117,14 +117,16 @@ public class FileMemberRepository implements MemberRepository {
 			objectMapper.writeValue(tempFile, members);
 
 			// 원자적 교체
-			if (file.exists()) {
-				file.delete();
+			if (file.exists() && !file.delete()) {
+				throw new IOException("기존 파일을 삭제할 수 없습니다");
 			}
 			if (!tempFile.renameTo(file)) {
 				throw new IOException("임시 파일을 원본 파일로 이동할 수 없습니다");
 			}
 		} catch (IOException e) {
-			tempFile.delete(); // 실패 시 임시 파일 삭제
+			if (tempFile.exists()) {
+				tempFile.delete();
+			}
 			throw new DataAccessException("파일을 저장하는 중 오류가 발생했습니다: " + filePath, e);
 		}
 	}
