@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.sopt.domain.Member;
 
 public interface MemberRepository {
+	Long generateNextId();
 	void save(Member member);
 	Optional<Member> findById(Long id);
 	List<Member> findAll();

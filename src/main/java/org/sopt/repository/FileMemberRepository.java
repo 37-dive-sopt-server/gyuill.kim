@@ -21,11 +21,18 @@ public class FileMemberRepository implements MemberRepository {
 	private final Map<Long, Member> store = new HashMap<>();
 	private final String filePath;
 	private final Gson gson;
+	private long sequence = 1L;
 
 	public FileMemberRepository(String filePath) {
 		this.filePath = filePath;
 		this.gson = new GsonBuilder().setPrettyPrinting().create();
 		loadFromFile();
+		initializeSequence();
+	}
+
+	@Override
+	public Long generateNextId() {
+		return sequence++;
 	}
 
 	@Override
@@ -78,6 +85,17 @@ public class FileMemberRepository implements MemberRepository {
 			}
 		} catch (IOException e) {
 			throw new RuntimeException("파일을 읽는 중 오류가 발생했습니다: " + filePath, e);
+		}
+	}
+
+	private void initializeSequence() {
+		if (store.isEmpty()) {
+			sequence = 1L;
+		} else {
+			Long maxId = store.keySet().stream()
+				.max(Long::compareTo)
+				.orElse(0L);
+			sequence = maxId + 1;
 		}
 	}
 

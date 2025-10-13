@@ -11,7 +11,14 @@ import org.sopt.domain.Member;
 public class MemoryMemberRepository implements MemberRepository {
 
 	private static final Map<Long, Member> store = new HashMap<>();
+	private static long sequence = 1L;
 
+	@Override
+	public Long generateNextId() {
+		return sequence++;
+	}
+
+	@Override
 	public void save(Member member) {
 		store.put(member.id(), member);
 	}

@@ -11,14 +11,14 @@ import org.sopt.repository.MemberRepository;
 public class MemberServiceImpl implements  MemberService {
 
 	private final MemberRepository memberRepository;
-	private static long sequence = 1L;
 
 	public MemberServiceImpl(MemberRepository memberRepository) {
 		this.memberRepository = memberRepository;
 	}
 
 	public Long join(String name, LocalDate birthDate, String email, Gender gender) {
-		Member member = new Member(sequence++, name, birthDate, email, gender);
+		Long id = memberRepository.generateNextId();
+		Member member = new Member(id, name, birthDate, email, gender);
 		memberRepository.save(member);
 		return member.id();
 	}
