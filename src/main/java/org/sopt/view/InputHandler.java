@@ -21,33 +21,33 @@ public class InputHandler {
 
 	public String readName() {
 		System.out.print("등록할 회원 이름을 입력하세요: ");
-		String name = scanner.nextLine();
+		String name = scanner.nextLine().trim();
 		validator.validateName(name);
 		return name;
 	}
 
 	public LocalDate readBirthDate() {
 		System.out.print("생년월일을 입력하세요 (YYYY-MM-DD): ");
-		String input = scanner.nextLine();
+		String input = scanner.nextLine().trim();
 		return validator.validateAndParseBirthDate(input);
 	}
 
 	public String readEmail() {
 		System.out.print("이메일을 입력하세요: ");
-		String email = scanner.nextLine();
+		String email = scanner.nextLine().trim();
 		validator.validateEmail(email);
 		return email;
 	}
 
 	public Gender readGender() {
 		System.out.print("성별을 선택하세요 (1: 남성, 2: 여성, 3: 기타): ");
-		String choice = scanner.nextLine();
+		String choice = scanner.nextLine().trim();
 		return validator.validateAndParseGender(choice);
 	}
 
 	public Long readMemberId() {
 		System.out.print("조회할 회원 ID를 입력하세요: ");
-		String input = scanner.nextLine();
+		String input = scanner.nextLine().trim();
 		try {
 			return Long.parseLong(input);
 		} catch (NumberFormatException e) {
@@ -57,7 +57,7 @@ public class InputHandler {
 
 	public String readEmailForDelete() {
 		System.out.print("삭제할 회원 이메일을 입력하세요: ");
-		return scanner.nextLine();
+		return scanner.nextLine().trim();
 	}
 
 	public void close() {
