@@ -36,4 +36,13 @@ public class MemoryMemberRepository {
 			.filter(member -> member.getEmail().equals(email))
 			.findFirst();
 	}
+
+	public boolean deleteByEmail(String email) {
+		Optional<Member> member = findByEmail(email);
+		if (member.isPresent()) {
+			store.remove(member.get().getId());
+			return true;
+		}
+		return false;
+	}
 }

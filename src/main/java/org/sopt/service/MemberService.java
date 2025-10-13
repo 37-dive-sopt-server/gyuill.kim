@@ -11,4 +11,5 @@ public interface MemberService {
 	Long join(String name, LocalDate birthDate, String email, Gender gender);
 	Optional<Member> findOne(Long memberId);
 	List<Member> findAllMembers();
+	boolean deleteMember(String email);
 }

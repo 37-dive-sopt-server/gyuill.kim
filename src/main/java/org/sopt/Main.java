@@ -23,7 +23,8 @@ public class Main {
 			System.out.println("1️⃣. 회원 등록 ➕");
 			System.out.println("2️⃣. ID로 회원 조회 🔍");
 			System.out.println("3️⃣. 전체 회원 조회 📋");
-			System.out.println("4️⃣. 종료 🚪");
+			System.out.println("4️⃣. 회원 삭제 🗑️");
+			System.out.println("5️⃣. 종료 🚪");
 			System.out.println("---------------------------------");
 			System.out.print("메뉴를 선택하세요: ");
 
@@ -122,6 +123,20 @@ public class Main {
 					}
 					break;
 				case "4":
+					System.out.print("삭제할 회원 이메일을 입력하세요: ");
+					String deleteEmail = scanner.nextLine();
+					if (deleteEmail.trim().isEmpty()) {
+						System.out.println("⚠️ 이메일을 입력해주세요.");
+						continue;
+					}
+					boolean deleted = memberController.deleteMember(deleteEmail);
+					if (deleted) {
+						System.out.println("✅ 회원 삭제 완료 (이메일: " + deleteEmail + ")");
+					} else {
+						System.out.println("⚠️ 해당 이메일의 회원을 찾을 수 없습니다.");
+					}
+					break;
+				case "5":
 					System.out.println("👋 서비스를 종료합니다. 안녕히 계세요!");
 					scanner.close();
 					return;

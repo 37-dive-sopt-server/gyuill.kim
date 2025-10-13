@@ -30,4 +30,8 @@ public class MemberServiceImpl implements  MemberService {
 	public List<Member> findAllMembers() {
 		return memberRepository.findAll();
 	}
+
+	public boolean deleteMember(String email) {
+		return memberRepository.deleteByEmail(email);
+	}
 }

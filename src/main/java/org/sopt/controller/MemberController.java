@@ -24,4 +24,8 @@ public class MemberController {
 	public List<Member> getAllMembers() {
 		return memberService.findAllMembers();
 	}
+
+	public boolean deleteMember(String email) {
+		return memberService.deleteMember(email);
+	}
 }
