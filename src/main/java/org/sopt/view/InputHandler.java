@@ -10,8 +10,8 @@ public class InputHandler {
 	private final Scanner scanner;
 	private final MemberValidator validator;
 
-	public InputHandler(Scanner scanner, MemberValidator validator) {
-		this.scanner = scanner;
+	public InputHandler(MemberValidator validator) {
+		this.scanner = new Scanner(System.in);
 		this.validator = validator;
 	}
 

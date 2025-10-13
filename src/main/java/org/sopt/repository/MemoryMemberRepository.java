@@ -10,15 +10,11 @@ import org.sopt.domain.Member;
 
 public class MemoryMemberRepository {
 
-
 	private static final Map<Long, Member> store = new HashMap<>();
 
-
 	public Member save(Member member) {
-
 		store.put(member.getId(), member);
 		return member;
-
 	}
 
 

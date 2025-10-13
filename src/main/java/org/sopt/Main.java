@@ -1,7 +1,5 @@
 package org.sopt;
 
-import java.util.Scanner;
-
 import org.sopt.controller.MemberController;
 import org.sopt.repository.MemoryMemberRepository;
 import org.sopt.service.MemberService;
@@ -16,7 +14,7 @@ public class Main {
 		MemberService memberService = new MemberServiceImpl(repository);
 		MemberController controller = new MemberController(memberService);
 		MemberValidator validator = new MemberValidator(repository);
-		InputHandler inputHandler = new InputHandler(new Scanner(System.in), validator);
+		InputHandler inputHandler = new InputHandler(validator);
 		MemberConsoleView view = new MemberConsoleView(controller, inputHandler);
 
 		view.run();
