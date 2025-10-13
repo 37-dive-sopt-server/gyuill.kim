@@ -51,15 +51,11 @@ public class MemberValidator {
 	}
 
 	public Gender validateAndParseGender(String genderChoice) {
-		switch (genderChoice) {
-			case "1":
-				return Gender.MALE;
-			case "2":
-				return Gender.FEMALE;
-			case "3":
-				return Gender.OTHER;
-			default:
-				throw new IllegalArgumentException("유효하지 않은 성별 선택입니다.");
-		}
+		return switch (genderChoice) {
+			case "1" -> Gender.MALE;
+			case "2" -> Gender.FEMALE;
+			case "3" -> Gender.OTHER;
+			default -> throw new IllegalArgumentException("유효하지 않은 성별 선택입니다.");
+		};
 	}
 }

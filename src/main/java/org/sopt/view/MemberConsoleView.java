@@ -42,26 +42,32 @@ public class MemberConsoleView {
 	}
 
 	private boolean processMenu(String choice) {
-		switch (choice) {
-			case "1":
+		return switch (choice) {
+			case "1" -> {
 				handleMemberRegistration();
-				return false;
-			case "2":
+				yield false;
+			}
+			case "2" -> {
 				handleFindMemberById();
-				return false;
-			case "3":
+				yield false;
+			}
+			case "3" -> {
 				handleFindAllMembers();
-				return false;
-			case "4":
+				yield false;
+			}
+			case "4" -> {
 				handleDeleteMember();
-				return false;
-			case "5":
+				yield false;
+			}
+			case "5" -> {
 				handleExit();
-				return true;
-			default:
+				yield true;
+			}
+			default -> {
 				printErrorMessage("잘못된 메뉴 선택입니다. 다시 시도해주세요.");
-				return false;
-		}
+				yield false;
+			}
+		};
 	}
 
 	private void handleMemberRegistration() {
