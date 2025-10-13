@@ -200,4 +200,5 @@ bin/
 ### Mac OS ###
 .DS_Store
 
+/docs/
 # End of https://www.toptal.com/developers/gitignore/api/java,git,intellij,gradle
