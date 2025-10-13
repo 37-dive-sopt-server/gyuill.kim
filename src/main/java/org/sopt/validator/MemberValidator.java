@@ -3,15 +3,15 @@ package org.sopt.validator;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.function.Function;
 
 import org.sopt.domain.Gender;
-import org.sopt.repository.MemoryMemberRepository;
 
 public class MemberValidator {
-	private final MemoryMemberRepository memberRepository;
+	private final Function<String, Boolean> emailExistsChecker;
 
-	public MemberValidator(MemoryMemberRepository memberRepository) {
-		this.memberRepository = memberRepository;
+	public MemberValidator(Function<String, Boolean> emailExistsChecker) {
+		this.emailExistsChecker = emailExistsChecker;
 	}
 
 	public void validateName(String name) {
@@ -41,11 +41,8 @@ public class MemberValidator {
 		if (email == null || email.trim().isEmpty()) {
 			throw new IllegalArgumentException("이메일을 입력해주세요.");
 		}
-		validateEmailDuplicate(email);
-	}
 
-	public void validateEmailDuplicate(String email) {
-		if (memberRepository.findByEmail(email).isPresent()) {
+		if (emailExistsChecker.apply(email)) {
 			throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
 		}
 	}
