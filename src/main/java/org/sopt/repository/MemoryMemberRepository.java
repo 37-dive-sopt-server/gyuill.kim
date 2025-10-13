@@ -30,4 +30,10 @@ public class MemoryMemberRepository {
 	public List<Member> findAll() {
 		return new ArrayList<>(store.values());
 	}
+
+	public Optional<Member> findByEmail(String email) {
+		return store.values().stream()
+			.filter(member -> member.getEmail().equals(email))
+			.findFirst();
+	}
 }

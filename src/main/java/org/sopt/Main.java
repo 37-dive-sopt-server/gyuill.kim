@@ -73,11 +73,15 @@ public class Main {
 							continue;
 					}
 
-					Long createdId = memberController.createMember(name, birthDate, email, gender);
-					if (createdId != null) {
-						System.out.println("✅ 회원 등록 완료 (ID: " + createdId + ")");
-					} else {
-						System.out.println("❌ 회원 등록 실패");
+					try {
+						Long createdId = memberController.createMember(name, birthDate, email, gender);
+						if (createdId != null) {
+							System.out.println("✅ 회원 등록 완료 (ID: " + createdId + ")");
+						} else {
+							System.out.println("❌ 회원 등록 실패");
+						}
+					} catch (IllegalStateException e) {
+						System.out.println("❌ " + e.getMessage());
 					}
 					break;
 				case "2":
