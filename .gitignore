@@ -201,4 +201,5 @@ bin/
 .DS_Store
 
 /docs/
+/data/
 # End of https://www.toptal.com/developers/gitignore/api/java,git,intellij,gradle
