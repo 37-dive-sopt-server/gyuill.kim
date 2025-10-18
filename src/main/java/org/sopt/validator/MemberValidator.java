@@ -1,0 +1,67 @@
+package org.sopt.validator;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.function.Function;
+
+import org.sopt.domain.Gender;
+
+public class MemberValidator {
+	private final Function<String, Boolean> emailExistsChecker;
+
+	public MemberValidator(Function<String, Boolean> emailExistsChecker) {
+		this.emailExistsChecker = emailExistsChecker;
+	}
+
+	public void validateName(String name) {
+		if (name == null || name.trim().isEmpty()) {
+			throw new IllegalArgumentException("이름을 입력해주세요.");
+		}
+	}
+
+	public LocalDate validateAndParseBirthDate(String birthDateStr) {
+		try {
+			LocalDate birthDate = LocalDate.parse(birthDateStr, DateTimeFormatter.ISO_LOCAL_DATE);
+			validateAge(birthDate);
+			return birthDate;
+		} catch (DateTimeParseException e) {
+			throw new IllegalArgumentException("유효하지 않은 날짜 형식입니다. YYYY-MM-DD 형식으로 입력해주세요.");
+		}
+	}
+
+	public void validateAge(LocalDate birthDate) {
+		int age = LocalDate.now().getYear() - birthDate.getYear();
+		if (age < 20) {
+			throw new IllegalArgumentException("20세 미만은 회원 가입이 불가능합니다.");
+		}
+	}
+
+	public void validateEmail(String email) {
+		if (email == null || email.trim().isEmpty()) {
+			throw new IllegalArgumentException("이메일을 입력해주세요.");
+		}
+
+		if (!isValidEmailFormat(email)) {
+			throw new IllegalArgumentException("유효하지 않은 이메일 형식입니다.");
+		}
+
+		if (emailExistsChecker.apply(email)) {
+			throw new IllegalStateException("이미 존재하는 이메일입니다.");
+		}
+	}
+
+	private boolean isValidEmailFormat(String email) {
+		String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
+		return email.matches(emailRegex);
+	}
+
+	public Gender validateAndParseGender(String genderChoice) {
+		return switch (genderChoice) {
+			case "1" -> Gender.MALE;
+			case "2" -> Gender.FEMALE;
+			case "3" -> Gender.OTHER;
+			default -> throw new IllegalArgumentException("유효하지 않은 성별 선택입니다.");
+		};
+	}
+}
