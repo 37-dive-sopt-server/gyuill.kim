@@ -9,8 +9,6 @@ import org.sopt.global.response.error.ErrorCode;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -28,19 +26,14 @@ public class GlobalExceptionHandler {
 			.body(CommonApiResponse.fail(e.getErrorCode()));
 	}
 
-	// 입력 값 검증 실패 처리
-	@ExceptionHandler(MethodArgumentNotValidException.class)
-	public ResponseEntity<?> handleValidationException(MethodArgumentNotValidException e) {
-		Map<String, String> errors = e.getBindingResult().getFieldErrors().stream()
-			.collect(Collectors.toMap(
-				FieldError::getField,
-				error -> error.getDefaultMessage() != null ? error.getDefaultMessage() : "유효하지 않은 값입니다",
-				(existing, replacement) -> existing
-			));
+	// 입력 값 검증 실패 처리 (Member validation 등)
+	@ExceptionHandler(IllegalArgumentException.class)
+	public ResponseEntity<?> handleIllegalArgumentException(IllegalArgumentException e) {
+		Map<String, String> error = Map.of("message", e.getMessage());
 
 		return ResponseEntity
 			.status(HttpStatus.BAD_REQUEST)
-			.body(CommonApiResponse.failWithDetails(ErrorCode.INVALID_INPUT, errors));
+			.body(CommonApiResponse.failWithDetails(ErrorCode.INVALID_INPUT, error));
 	}
 
 	// JSON 파싱 실패 처리 (enum, 날짜 형식 등)
