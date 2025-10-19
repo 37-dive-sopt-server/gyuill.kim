@@ -1,15 +1,10 @@
 package org.sopt.global.exception;
 
-/**
- * 데이터 저장소 접근 실패
- */
-public class DataAccessException extends RuntimeException {
+import org.sopt.global.response.error.ErrorType;
 
-	public DataAccessException(String message) {
-		super(message);
-	}
+public class DataAccessException extends BaseException {
 
-	public DataAccessException(String message, Throwable cause) {
-		super(message, cause);
+	public DataAccessException(ErrorType errorCode) {
+		super(errorCode);
 	}
 }

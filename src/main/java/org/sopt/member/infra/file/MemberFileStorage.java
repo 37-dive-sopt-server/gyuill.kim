@@ -13,6 +13,7 @@ import java.util.List;
 import org.sopt.member.domain.entity.Gender;
 import org.sopt.member.domain.entity.Member;
 import org.sopt.global.exception.DataAccessException;
+import org.sopt.global.response.error.ErrorCode;
 
 public class MemberFileStorage {
 	private static final String DELIMITER = ",";
@@ -39,9 +40,9 @@ public class MemberFileStorage {
 			}
 			return members;
 		} catch (IOException e) {
-			throw new DataAccessException("파일을 읽는 중 오류가 발생했습니다: " + filePath, e);
+			throw new DataAccessException(ErrorCode.DATA_READ_ERROR);
 		} catch (Exception e) {
-			throw new DataAccessException("데이터 파일 형식이 올바르지 않습니다: " + filePath, e);
+			throw new DataAccessException(ErrorCode.DATA_PARSE_ERROR);
 		}
 	}
 
@@ -70,7 +71,7 @@ public class MemberFileStorage {
 			if (tempFile.exists()) {
 				tempFile.delete();
 			}
-			throw new DataAccessException("파일을 저장하는 중 오류가 발생했습니다: " + filePath, e);
+			throw new DataAccessException(ErrorCode.DATA_WRITE_ERROR);
 		}
 	}
 

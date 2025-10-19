@@ -9,6 +9,12 @@ public enum ErrorCode implements ErrorType {
 	// 공통 에러
 	INVALID_INPUT("C001", "입력값이 올바르지 않습니다"),
 	INVALID_FORMAT("C002", "데이터 형식이 올바르지 않습니다"),
+
+	// 데이터 접근 에러
+	DATA_READ_ERROR("C003", "데이터를 읽을 수 없습니다"),
+	DATA_PARSE_ERROR("C004", "데이터 형식을 파싱할 수 없습니다"),
+	DATA_WRITE_ERROR("C005", "데이터를 저장할 수 없습니다"),
+
 	INTERNAL_SERVER_ERROR("C999", "서버 내부 오류가 발생했습니다");
 
 	private final String code;
