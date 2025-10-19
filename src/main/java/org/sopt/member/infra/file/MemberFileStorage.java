@@ -1,44 +1,47 @@
 package org.sopt.member.infra.file;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.sopt.member.domain.entity.Gender;
 import org.sopt.member.domain.entity.Member;
 import org.sopt.global.exception.DataAccessException;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-
 public class MemberFileStorage {
+	private static final String DELIMITER = ",";
 	private final String filePath;
-	private final ObjectMapper objectMapper;
 
 	public MemberFileStorage(String filePath) {
 		this.filePath = filePath;
-		this.objectMapper = new ObjectMapper();
-		this.objectMapper.registerModule(new JavaTimeModule());
-		this.objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
 	}
 
 	public List<Member> load() {
 		File file = new File(filePath);
 		if (!file.exists()) {
-			// 파일이 없으면 빈 목록 반환
 			return new ArrayList<>();
 		}
 
-		try {
-			List<Member> members = objectMapper.readValue(file, new TypeReference<List<Member>>() {});
-			return members != null ? members : new ArrayList<>();
-		} catch (JsonProcessingException e) {
-			throw new DataAccessException("데이터 파일 형식이 올바르지 않습니다: " + filePath, e);
+		List<Member> members = new ArrayList<>();
+		try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+			String line;
+			while ((line = reader.readLine()) != null) {
+				if (line.trim().isEmpty()) {
+					continue;
+				}
+				members.add(parseMember(line));
+			}
+			return members;
 		} catch (IOException e) {
 			throw new DataAccessException("파일을 읽는 중 오류가 발생했습니다: " + filePath, e);
+		} catch (Exception e) {
+			throw new DataAccessException("데이터 파일 형식이 올바르지 않습니다: " + filePath, e);
 		}
 	}
 
@@ -51,10 +54,12 @@ public class MemberFileStorage {
 			parentDir.mkdirs();
 		}
 
-		try {
-			objectMapper.writeValue(tempFile, members);
+		try (BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile))) {
+			for (Member member : members) {
+				writer.write(formatMember(member));
+				writer.newLine();
+			}
 
-			// 원자적 교체
 			if (file.exists() && !file.delete()) {
 				throw new IOException("기존 파일을 삭제할 수 없습니다");
 			}
@@ -67,5 +72,30 @@ public class MemberFileStorage {
 			}
 			throw new DataAccessException("파일을 저장하는 중 오류가 발생했습니다: " + filePath, e);
 		}
+	}
+
+	private Member parseMember(String line) {
+		String[] parts = line.split(DELIMITER, -1);
+		if (parts.length != 5) {
+			throw new IllegalArgumentException("잘못된 데이터 형식입니다");
+		}
+
+		Long id = Long.parseLong(parts[0]);
+		String name = parts[1];
+		LocalDate birthDate = LocalDate.parse(parts[2]);
+		String email = parts[3];
+		Gender gender = Gender.valueOf(parts[4]);
+
+		return new Member(id, name, birthDate, email, gender);
+	}
+
+	private String formatMember(Member member) {
+		return String.join(DELIMITER,
+			member.id().toString(),
+			member.name(),
+			member.birthDate().toString(),
+			member.email(),
+			member.gender().name()
+		);
 	}
 }

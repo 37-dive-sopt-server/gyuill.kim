@@ -8,6 +8,7 @@ import java.util.Optional;
 
 import org.sopt.member.domain.entity.Member;
 import org.sopt.member.domain.repository.MemberRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -18,7 +19,7 @@ public class FileMemberRepository implements MemberRepository {
 	private final MemberFileStorage fileStorage;
 	private long sequence = 1L;
 
-	public FileMemberRepository(String filePath) {
+	public FileMemberRepository(@Value("${member.file.path}") String filePath) {
 		this.fileStorage = new MemberFileStorage(filePath);
 		loadMembers();
 		initializeSequence();
