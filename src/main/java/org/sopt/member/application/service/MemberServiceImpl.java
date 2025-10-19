@@ -20,6 +20,11 @@ public class MemberServiceImpl implements MemberService {
 
 	@Override
 	public MemberResponse join(MemberCreateRequest request) {
+
+		if (memberRepository.findByEmail(request.email()).isPresent()) {
+        	throw new IllegalArgumentException("이미 존재하는 이메일입니다");
+		}
+
 		Long id = memberRepository.generateNextId();
 		Member member = new Member(
 			id,
