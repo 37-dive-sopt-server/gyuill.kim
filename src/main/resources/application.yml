@@ -1,9 +1,9 @@
 server:
   port: 8080
   error:
-    include-message: never
-    include-stacktrace: never
-    include-exception: false
+    include-message: always
+    include-stacktrace: always
+    include-exception: true
 
 spring:
   swagger:
@@ -19,6 +19,7 @@ springdoc:
     path: /swagger-ui.html
   api-docs:
     path: /api-docs
+  override-with-generic-response: false
 
 member:
   file:

@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.sopt.global.response.CommonApiResponse;
 import org.sopt.global.response.error.ErrorCode;
 
 import io.swagger.v3.oas.models.Operation;
@@ -40,7 +39,10 @@ public class SwaggerErrorExampleGenerator {
 	}
 
 	private Example createSwaggerExample(ErrorCode errorCode) {
-		CommonApiResponse<Void> errorResponse = CommonApiResponse.fail(errorCode);
+		Map<String, Object> errorResponse = new java.util.HashMap<>();
+		errorResponse.put("code", errorCode.getCode());
+		errorResponse.put("message", errorCode.getMessage());
+		errorResponse.put("data", null);
 
 		Example example = new Example();
 		example.setValue(errorResponse);
