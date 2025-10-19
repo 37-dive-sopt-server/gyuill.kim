@@ -6,6 +6,7 @@ import java.util.Scanner;
 import org.sopt.domain.Gender;
 import org.sopt.validator.MemberValidator;
 
+@Deprecated
 public class InputHandler {
 	private final Scanner scanner;
 	private final MemberValidator validator;

@@ -1,11 +1,11 @@
 package org.sopt.service;
 
-import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
-import org.sopt.domain.Gender;
 import org.sopt.domain.Member;
+import org.sopt.dto.MemberCreateRequest;
+import org.sopt.dto.MemberResponse;
 import org.sopt.repository.MemberRepository;
 import org.springframework.stereotype.Service;
 
@@ -19,25 +19,38 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public Long join(String name, LocalDate birthDate, String email, Gender gender) {
+	public MemberResponse join(MemberCreateRequest request) {
 		Long id = memberRepository.generateNextId();
-		Member member = new Member(id, name, birthDate, email, gender);
+		Member member = new Member(
+			id,
+			request.name(),
+			request.birthDate(),
+			request.email(),
+			request.gender()
+		);
 		memberRepository.save(member);
-		return member.id();
+		return MemberResponse.from(member);
 	}
 
 	@Override
-	public Optional<Member> findOne(Long memberId) {
-		return memberRepository.findById(memberId);
+	public MemberResponse findMember(Long memberId) {
+		Member member = memberRepository.findById(memberId)
+			.orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다. ID: " + memberId));
+		return MemberResponse.from(member);
 	}
 
 	@Override
-	public List<Member> findAllMembers() {
-		return memberRepository.findAll();
+	public List<MemberResponse> findAllMembers() {
+		return memberRepository.findAll().stream()
+			.map(MemberResponse::from)
+			.collect(Collectors.toList());
 	}
 
 	@Override
-	public boolean deleteMember(String email) {
-		return memberRepository.deleteByEmail(email);
+	public void deleteMember(String email) {
+		boolean deleted = memberRepository.deleteByEmail(email);
+		if (!deleted) {
+			throw new IllegalArgumentException("회원을 찾을 수 없습니다. Email: " + email);
+		}
 	}
 }

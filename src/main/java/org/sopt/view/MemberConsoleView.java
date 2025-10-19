@@ -9,6 +9,7 @@ import org.sopt.domain.Gender;
 import org.sopt.domain.Member;
 import org.sopt.exception.DataAccessException;
 
+@Deprecated
 public class MemberConsoleView {
 	private final MemberController controller;
 	private final InputHandler inputHandler;

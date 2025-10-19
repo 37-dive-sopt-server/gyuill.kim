@@ -1,16 +1,13 @@
 package org.sopt.service;
 
-import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
-import org.sopt.domain.Gender;
-import org.sopt.domain.Member;
-
+import org.sopt.dto.MemberCreateRequest;
+import org.sopt.dto.MemberResponse;
 
 public interface MemberService {
-	Long join(String name, LocalDate birthDate, String email, Gender gender);
-	Optional<Member> findOne(Long memberId);
-	List<Member> findAllMembers();
-	boolean deleteMember(String email);
+	MemberResponse join(MemberCreateRequest request);
+	MemberResponse findMember (Long memberId);
+	List<MemberResponse> findAllMembers();
+	void deleteMember(String email);
 }
