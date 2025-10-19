@@ -2,8 +2,10 @@ package org.sopt.member.presentation.controller;
 
 import java.util.List;
 
+import org.sopt.global.annotation.ApiExceptions;
 import org.sopt.global.annotation.AutoApiResponse;
 import org.sopt.global.annotation.SuccessCodeAnnotation;
+import org.sopt.global.response.error.ErrorCode;
 import org.sopt.global.response.success.SuccessCode;
 import org.sopt.member.application.dto.MemberCreateRequest;
 import org.sopt.member.application.dto.MemberResponse;
@@ -18,9 +20,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/members")
 @AutoApiResponse
+@Tag(name = "Member", description = "회원 관리 API")
 public class MemberController {
 
 	private final MemberService memberService;
@@ -32,25 +39,41 @@ public class MemberController {
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	@SuccessCodeAnnotation(SuccessCode.MEMBER_CREATED)
-	public MemberResponse createMember(@RequestBody MemberCreateRequest request) {
+	@Operation(summary = "회원 가입", description = "새로운 회원을 등록합니다.")
+	@ApiExceptions({ErrorCode.DUPLICATE_EMAIL, ErrorCode.INVALID_INPUT, ErrorCode.INVALID_FORMAT})
+	public MemberResponse createMember(
+		@Parameter(description = "회원 가입 정보", required = true)
+		@RequestBody MemberCreateRequest request
+	) {
 		return memberService.join(request);
 	}
 
 	@GetMapping("/{id}")
 	@SuccessCodeAnnotation(SuccessCode.MEMBER_VIEW)
-	public MemberResponse getMemberById(@PathVariable Long id) {
+	@Operation(summary = "회원 조회", description = "ID로 특정 회원의 정보를 조회합니다.")
+	@ApiExceptions({ErrorCode.MEMBER_NOT_FOUND})
+	public MemberResponse getMemberById(
+		@Parameter(description = "회원 ID", required = true, example = "1")
+		@PathVariable Long id
+	) {
 		return memberService.findMember(id);
 	}
 
 	@GetMapping
 	@SuccessCodeAnnotation(SuccessCode.MEMBER_VIEW)
+	@Operation(summary = "전체 회원 조회", description = "등록된 모든 회원의 정보를 조회합니다.")
 	public List<MemberResponse> getAllMembers() {
 		return memberService.findAllMembers();
 	}
 
 	@DeleteMapping("/{email}")
 	@SuccessCodeAnnotation(SuccessCode.MEMBER_DELETED)
-	public void deleteMember(@PathVariable String email) {
+	@Operation(summary = "회원 삭제", description = "이메일로 특정 회원을 삭제합니다.")
+	@ApiExceptions({ErrorCode.MEMBER_NOT_FOUND})
+	public void deleteMember(
+		@Parameter(description = "회원 이메일", required = true, example = "test@sopt.org")
+		@PathVariable String email
+	) {
 		memberService.deleteMember(email);
 	}
 }
