@@ -1,6 +1,7 @@
 package org.sopt.global.swagger;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -39,7 +40,7 @@ public class SwaggerErrorExampleGenerator {
 	}
 
 	private Example createSwaggerExample(ErrorCode errorCode) {
-		Map<String, Object> errorResponse = new java.util.HashMap<>();
+		Map<String, Object> errorResponse = new HashMap<>();
 		errorResponse.put("code", errorCode.getCode());
 		errorResponse.put("message", errorCode.getMessage());
 		errorResponse.put("data", null);
