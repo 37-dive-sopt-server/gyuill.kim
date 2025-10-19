@@ -35,7 +35,7 @@ public class SwaggerErrorExampleGenerator {
 		return ExampleHolder.of(
 			createSwaggerExample(errorCode),
 			errorCode.name(),
-			getHttpStatus(errorCode)
+			errorCode.getStatus()
 		);
 	}
 
@@ -45,14 +45,6 @@ public class SwaggerErrorExampleGenerator {
 		Example example = new Example();
 		example.setValue(errorResponse);
 		return example;
-	}
-
-	private int getHttpStatus(ErrorCode errorCode) {
-		return switch (errorCode) {
-			case MEMBER_NOT_FOUND -> 404;
-			case INTERNAL_SERVER_ERROR, DATA_READ_ERROR, DATA_PARSE_ERROR, DATA_WRITE_ERROR -> 500;
-			default -> 400;
-		};
 	}
 
 	private void addExamplesToResponses(ApiResponses responses, Map<Integer, List<ExampleHolder>> statusWithExampleHolders) {

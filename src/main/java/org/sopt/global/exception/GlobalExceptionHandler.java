@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.sopt.global.response.CommonApiResponse;
 import org.sopt.global.response.error.ErrorCode;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -20,9 +21,11 @@ public class GlobalExceptionHandler {
 
 	// 커스텀 예외 처리
 	@ExceptionHandler(BaseException.class)
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	public CommonApiResponse<Void> handleBaseException(BaseException e) {
-		return CommonApiResponse.fail(e.getErrorCode());
+	public ResponseEntity<CommonApiResponse<Void>> handleBaseException(BaseException e) {
+		ErrorCode errorCode = (ErrorCode) e.getErrorCode();
+		return ResponseEntity
+			.status(errorCode.getStatus())
+			.body(CommonApiResponse.fail(errorCode));
 	}
 
 	// 입력 값 검증 실패 처리 (Member validation 등)
