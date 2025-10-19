@@ -3,6 +3,8 @@ package org.sopt.member.application.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.sopt.global.exception.BaseException;
+import org.sopt.global.response.error.ErrorCode;
 import org.sopt.member.domain.entity.Member;
 import org.sopt.member.application.dto.MemberCreateRequest;
 import org.sopt.member.application.dto.MemberResponse;
@@ -22,7 +24,7 @@ public class MemberServiceImpl implements MemberService {
 	public MemberResponse join(MemberCreateRequest request) {
 
 		if (memberRepository.findByEmail(request.email()).isPresent()) {
-        	throw new IllegalArgumentException("이미 존재하는 이메일입니다");
+        	throw new BaseException(ErrorCode.DUPLICATE_EMAIL);
 		}
 
 		Long id = memberRepository.generateNextId();
@@ -40,7 +42,7 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public MemberResponse findMember(Long memberId) {
 		Member member = memberRepository.findById(memberId)
-			.orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다. ID: " + memberId));
+			.orElseThrow(() -> new BaseException(ErrorCode.MEMBER_NOT_FOUND));
 		return MemberResponse.from(member);
 	}
 
@@ -55,7 +57,7 @@ public class MemberServiceImpl implements MemberService {
 	public void deleteMember(String email) {
 		boolean deleted = memberRepository.deleteByEmail(email);
 		if (!deleted) {
-			throw new IllegalArgumentException("회원을 찾을 수 없습니다. Email: " + email);
+			throw new BaseException(ErrorCode.MEMBER_NOT_FOUND);
 		}
 	}
 }
