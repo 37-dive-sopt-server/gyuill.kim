@@ -7,7 +7,9 @@ import java.util.Optional;
 import org.sopt.domain.Gender;
 import org.sopt.domain.Member;
 import org.sopt.repository.MemberRepository;
+import org.springframework.stereotype.Service;
 
+@Service
 public class MemberServiceImpl implements MemberService {
 
 	private final MemberRepository memberRepository;

@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.sopt.domain.Gender;
 import org.sopt.domain.Member;
 
+
 public interface MemberService {
 	Long join(String name, LocalDate birthDate, String email, Gender gender);
 	Optional<Member> findOne(Long memberId);

@@ -8,7 +8,9 @@ import java.util.Optional;
 
 import org.sopt.domain.Member;
 import org.sopt.storage.MemberFileStorage;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class FileMemberRepository implements MemberRepository {
 
 	private final Map<Long, Member> store = new HashMap<>();
