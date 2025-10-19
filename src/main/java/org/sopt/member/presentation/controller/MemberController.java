@@ -2,21 +2,25 @@ package org.sopt.member.presentation.controller;
 
 import java.util.List;
 
+import org.sopt.global.response.annotation.AutoApiResponse;
+import org.sopt.global.response.annotation.SuccessCodeAnnotation;
+import org.sopt.global.response.success.SuccessCode;
 import org.sopt.member.application.dto.MemberCreateRequest;
 import org.sopt.member.application.dto.MemberResponse;
 import org.sopt.member.application.service.MemberService;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/members")
+@AutoApiResponse
 public class MemberController {
 
 	private final MemberService memberService;
@@ -26,26 +30,27 @@ public class MemberController {
 	}
 
 	@PostMapping
-	public ResponseEntity<MemberResponse> createMember(@RequestBody MemberCreateRequest request) {
-		MemberResponse response = memberService.join(request);
-		return ResponseEntity.status(HttpStatus.CREATED).body(response);
+	@ResponseStatus(HttpStatus.CREATED)
+	@SuccessCodeAnnotation(SuccessCode.MEMBER_CREATED)
+	public MemberResponse createMember(@RequestBody MemberCreateRequest request) {
+		return memberService.join(request);
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<MemberResponse> getMemberById(@PathVariable Long id) {
-		MemberResponse response = memberService.findMember(id);
-		return ResponseEntity.ok(response);
+	@SuccessCodeAnnotation(SuccessCode.MEMBER_VIEW)
+	public MemberResponse getMemberById(@PathVariable Long id) {
+		return memberService.findMember(id);
 	}
 
 	@GetMapping
-	public ResponseEntity<List<MemberResponse>> getAllMembers() {
-		List<MemberResponse> responses = memberService.findAllMembers();
-		return ResponseEntity.ok(responses);
+	@SuccessCodeAnnotation(SuccessCode.MEMBER_VIEW)
+	public List<MemberResponse> getAllMembers() {
+		return memberService.findAllMembers();
 	}
 
 	@DeleteMapping("/{email}")
-	public ResponseEntity<Void> deleteMember(@PathVariable String email) {
+	@SuccessCodeAnnotation(SuccessCode.MEMBER_DELETED)
+	public void deleteMember(@PathVariable String email) {
 		memberService.deleteMember(email);
-		return ResponseEntity.noContent().build();
 	}
 }

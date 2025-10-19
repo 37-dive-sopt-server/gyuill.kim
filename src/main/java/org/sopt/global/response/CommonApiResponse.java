@@ -7,7 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 public class CommonApiResponse<T> {
 
-	@Schema(description = "응답 코드", example = "M001" /* 또는 E001 등 */)
+	@Schema(description = "응답 코드", example = "M001")
 	private final String code;
 
 	@Schema(description = "응답 메시지", example = "회원 정보 조회 성공")
