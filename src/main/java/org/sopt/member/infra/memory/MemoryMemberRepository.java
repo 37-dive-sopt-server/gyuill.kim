@@ -8,8 +8,9 @@ import java.util.Optional;
 
 import org.sopt.member.domain.entity.Member;
 import org.sopt.member.domain.repository.MemberRepository;
+import org.springframework.stereotype.Repository;
 
-// @Repository
+@Repository
 public class MemoryMemberRepository implements MemberRepository {
 
 	private final Map<Long, Member> store = new HashMap<>();

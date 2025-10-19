@@ -9,8 +9,10 @@ import java.util.Optional;
 import org.sopt.member.domain.entity.Member;
 import org.sopt.member.domain.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
+@Primary
 @Repository
 public class FileMemberRepository implements MemberRepository {
 
