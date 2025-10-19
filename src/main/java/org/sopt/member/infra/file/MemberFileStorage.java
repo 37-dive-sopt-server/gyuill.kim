@@ -62,10 +62,10 @@ public class MemberFileStorage {
 			}
 
 			if (file.exists() && !file.delete()) {
-				throw new IOException("기존 파일을 삭제할 수 없습니다");
+				throw new DataAccessException(ErrorCode.DATA_DELETE_ERROR);
 			}
 			if (!tempFile.renameTo(file)) {
-				throw new IOException("임시 파일을 원본 파일로 이동할 수 없습니다");
+				throw new DataAccessException(ErrorCode.DATA_MOVE_ERROR);
 			}
 		} catch (IOException e) {
 			if (tempFile.exists()) {

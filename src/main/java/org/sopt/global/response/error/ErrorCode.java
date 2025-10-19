@@ -14,6 +14,8 @@ public enum ErrorCode implements ErrorType {
 	DATA_READ_ERROR("C003", "데이터를 읽을 수 없습니다", 500),
 	DATA_PARSE_ERROR("C004", "데이터 형식을 파싱할 수 없습니다", 500),
 	DATA_WRITE_ERROR("C005", "데이터를 저장할 수 없습니다", 500),
+	DATA_DELETE_ERROR("C006", "데이터를 삭제할 수 없습니다", 500),
+	DATA_MOVE_ERROR("C007", "임시 파일을 원본 파일로 이동할 수 없습니다", 500),
 
 	INTERNAL_SERVER_ERROR("C999", "서버 내부 오류가 발생했습니다", 500);
 
