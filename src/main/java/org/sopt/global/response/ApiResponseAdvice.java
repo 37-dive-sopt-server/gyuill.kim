@@ -1,7 +1,7 @@
 package org.sopt.global.response;
 
-import org.sopt.global.response.annotation.AutoApiResponse;
-import org.sopt.global.response.annotation.SuccessCodeAnnotation;
+import org.sopt.global.annotation.AutoApiResponse;
+import org.sopt.global.annotation.SuccessCodeAnnotation;
 import org.sopt.global.response.success.SuccessCode;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;

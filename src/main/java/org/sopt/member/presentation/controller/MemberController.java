@@ -2,8 +2,8 @@ package org.sopt.member.presentation.controller;
 
 import java.util.List;
 
-import org.sopt.global.response.annotation.AutoApiResponse;
-import org.sopt.global.response.annotation.SuccessCodeAnnotation;
+import org.sopt.global.annotation.AutoApiResponse;
+import org.sopt.global.annotation.SuccessCodeAnnotation;
 import org.sopt.global.response.success.SuccessCode;
 import org.sopt.member.application.dto.MemberCreateRequest;
 import org.sopt.member.application.dto.MemberResponse;

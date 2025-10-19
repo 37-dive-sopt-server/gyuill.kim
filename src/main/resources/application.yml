@@ -5,6 +5,10 @@ server:
     include-stacktrace: never
     include-exception: false
 
+spring:
+  swagger:
+    base-url: http://localhost:8080
+
 logging:
   level:
     org.sopt: debug
