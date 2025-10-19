@@ -1,12 +1,12 @@
-package org.sopt.storage;
+package org.sopt.member.infra.file;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.sopt.domain.Member;
-import org.sopt.exception.DataAccessException;
+import org.sopt.member.domain.entity.Member;
+import org.sopt.global.exception.DataAccessException;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;

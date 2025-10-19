@@ -1,9 +1,9 @@
-package org.sopt.service;
+package org.sopt.member.application.service;
 
 import java.util.List;
 
-import org.sopt.dto.MemberCreateRequest;
-import org.sopt.dto.MemberResponse;
+import org.sopt.member.application.dto.MemberCreateRequest;
+import org.sopt.member.application.dto.MemberResponse;
 
 public interface MemberService {
 	MemberResponse join(MemberCreateRequest request);

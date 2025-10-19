@@ -1,9 +1,9 @@
-package org.sopt.repository;
+package org.sopt.member.domain.repository;
 
 import java.util.List;
 import java.util.Optional;
 
-import org.sopt.domain.Member;
+import org.sopt.member.domain.entity.Member;
 
 public interface MemberRepository {
 	Long generateNextId();

@@ -1,13 +1,13 @@
-package org.sopt.view;
+package org.sopt.deprecated.view;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-import org.sopt.controller.MemberController;
-import org.sopt.domain.Gender;
-import org.sopt.domain.Member;
-import org.sopt.exception.DataAccessException;
+import org.sopt.member.presentation.controller.MemberController;
+import org.sopt.member.domain.entity.Gender;
+import org.sopt.member.domain.entity.Member;
+import org.sopt.global.exception.DataAccessException;
 
 @Deprecated
 public class MemberConsoleView {

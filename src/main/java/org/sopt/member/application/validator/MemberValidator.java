@@ -1,11 +1,11 @@
-package org.sopt.validator;
+package org.sopt.member.application.validator;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.function.Function;
 
-import org.sopt.domain.Gender;
+import org.sopt.member.domain.entity.Gender;
 
 public class MemberValidator {
 	private final Function<String, Boolean> emailExistsChecker;

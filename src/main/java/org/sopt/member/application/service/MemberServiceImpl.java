@@ -1,12 +1,12 @@
-package org.sopt.service;
+package org.sopt.member.application.service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.sopt.domain.Member;
-import org.sopt.dto.MemberCreateRequest;
-import org.sopt.dto.MemberResponse;
-import org.sopt.repository.MemberRepository;
+import org.sopt.member.domain.entity.Member;
+import org.sopt.member.application.dto.MemberCreateRequest;
+import org.sopt.member.application.dto.MemberResponse;
+import org.sopt.member.domain.repository.MemberRepository;
 import org.springframework.stereotype.Service;
 
 @Service

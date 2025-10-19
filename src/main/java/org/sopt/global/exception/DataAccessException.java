@@ -1,4 +1,4 @@
-package org.sopt.exception;
+package org.sopt.global.exception;
 
 /**
  * 데이터 저장소 접근 실패

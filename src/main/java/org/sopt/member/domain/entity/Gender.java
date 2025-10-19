@@ -1,4 +1,4 @@
-package org.sopt.domain;
+package org.sopt.member.domain.entity;
 
 public enum Gender {
 	MALE("남성"),

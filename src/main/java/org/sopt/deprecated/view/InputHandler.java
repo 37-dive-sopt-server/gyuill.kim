@@ -1,10 +1,10 @@
-package org.sopt.view;
+package org.sopt.deprecated.view;
 
 import java.time.LocalDate;
 import java.util.Scanner;
 
-import org.sopt.domain.Gender;
-import org.sopt.validator.MemberValidator;
+import org.sopt.member.domain.entity.Gender;
+import org.sopt.member.application.validator.MemberValidator;
 
 @Deprecated
 public class InputHandler {

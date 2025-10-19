@@ -1,4 +1,4 @@
-package org.sopt.repository;
+package org.sopt.member.infra.file;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.sopt.domain.Member;
-import org.sopt.storage.MemberFileStorage;
+import org.sopt.member.domain.entity.Member;
+import org.sopt.member.domain.repository.MemberRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository

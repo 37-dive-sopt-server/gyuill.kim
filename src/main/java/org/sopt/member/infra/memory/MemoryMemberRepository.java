@@ -1,4 +1,4 @@
-package org.sopt.repository;
+package org.sopt.member.infra.memory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -6,7 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.sopt.domain.Member;
+import org.sopt.member.domain.entity.Member;
+import org.sopt.member.domain.repository.MemberRepository;
 
 // @Repository
 public class MemoryMemberRepository implements MemberRepository {
