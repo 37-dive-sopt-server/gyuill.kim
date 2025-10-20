@@ -7,7 +7,7 @@ import org.sopt.member.application.dto.MemberResponse;
 
 public interface MemberService {
 	MemberResponse join(MemberCreateRequest request);
-	MemberResponse findMember (Long memberId);
+	MemberResponse findMember(Long memberId);
 	List<MemberResponse> findAllMembers();
 	void deleteMember(String email);
 }

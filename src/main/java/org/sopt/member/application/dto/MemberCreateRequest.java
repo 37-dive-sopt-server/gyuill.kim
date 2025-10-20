@@ -19,7 +19,7 @@ public record MemberCreateRequest(
 	@Schema(description = "이메일 주소", example = "sopt@sopt.org", requiredMode = REQUIRED)
 	String email,
 
-	@Schema(description = "성별 (MALE/FEMALE)", example = "MALE", requiredMode = REQUIRED)
+	@Schema(description = "성별 (MALE/FEMALE/OTHER)", example = "MALE", requiredMode = REQUIRED)
 	Gender gender
 ) {
 }

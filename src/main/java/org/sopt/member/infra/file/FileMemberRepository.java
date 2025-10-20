@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicLong;
 
 import org.sopt.member.domain.entity.Member;
 import org.sopt.member.domain.repository.MemberRepository;
@@ -19,7 +20,7 @@ public class FileMemberRepository implements MemberRepository {
 	private final Map<Long, Member> store = new HashMap<>();
 	private final Map<String, Member> emailIndex = new HashMap<>();
 	private final MemberFileStorage fileStorage;
-	private long sequence = 1L;
+	private final AtomicLong sequence = new AtomicLong(1L);
 
 	public FileMemberRepository(@Value("${member.file.path}") String filePath) {
 		this.fileStorage = new MemberFileStorage(filePath);
@@ -29,7 +30,7 @@ public class FileMemberRepository implements MemberRepository {
 
 	@Override
 	public Long generateNextId() {
-		return sequence++;
+		return sequence.getAndIncrement();
 	}
 
 	@Override
@@ -76,10 +77,11 @@ public class FileMemberRepository implements MemberRepository {
 	}
 
 	private void initializeSequence() {
-		sequence = store.keySet().stream()
+		long nextId = store.keySet().stream()
 			.max(Long::compareTo)
 			.map(maxId -> maxId + 1)
 			.orElse(1L);
+		sequence.set(nextId);
 	}
 
 	private void persistToFile() {

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicLong;
 
 import org.sopt.member.domain.entity.Member;
 import org.sopt.member.domain.repository.MemberRepository;
@@ -14,11 +15,11 @@ import org.springframework.stereotype.Repository;
 public class MemoryMemberRepository implements MemberRepository {
 
 	private final Map<Long, Member> store = new HashMap<>();
-	private long sequence = 1L;
+	private final AtomicLong sequence = new AtomicLong(1L);
 
 	@Override
 	public Long generateNextId() {
-		return sequence++;
+		return sequence.getAndIncrement();
 	}
 
 	@Override
