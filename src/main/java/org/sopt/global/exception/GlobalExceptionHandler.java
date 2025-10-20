@@ -4,8 +4,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.sopt.global.response.CommonApiResponse;
 import org.sopt.global.response.error.ErrorCode;
+import org.sopt.global.response.error.ErrorType;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -19,19 +22,23 @@ import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+	private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
 	// 커스텀 예외 처리
 	@ExceptionHandler(BaseException.class)
 	public ResponseEntity<CommonApiResponse<Void>> handleBaseException(BaseException e) {
-		ErrorCode errorCode = (ErrorCode) e.getErrorCode();
+		ErrorType errorType = e.getErrorCode();
+		log.warn("Business exception occurred: code={}, message={}", errorType.getCode(), errorType.getMessage());
 		return ResponseEntity
-			.status(errorCode.getStatus())
-			.body(CommonApiResponse.fail(errorCode));
+			.status(errorType.getStatus())
+			.body(CommonApiResponse.fail(errorType));
 	}
 
 	// 입력 값 검증 실패 처리 (Member validation 등)
 	@ExceptionHandler(IllegalArgumentException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public CommonApiResponse<Map<String, String>> handleIllegalArgumentException(IllegalArgumentException e) {
+		log.warn("Validation failed: {}", e.getMessage());
 		Map<String, String> error = Map.of("message", e.getMessage());
 		return CommonApiResponse.failWithDetails(ErrorCode.INVALID_INPUT, error);
 	}
@@ -46,8 +53,11 @@ public class GlobalExceptionHandler {
 			String fieldName = invalidFormatException.getPath().stream()
 				.map(JsonMappingException.Reference::getFieldName)
 				.collect(Collectors.joining("."));
+			log.warn("Invalid format for field '{}': value={}, targetType={}",
+				fieldName, invalidFormatException.getValue(), invalidFormatException.getTargetType().getSimpleName());
 			errorDetails.put(fieldName, "올바른 형식이 아닙니다");
 		} else {
+			log.warn("Request body is not readable: {}", e.getMessage());
 			errorDetails.put("body", "요청 데이터를 읽을 수 없습니다");
 		}
 
@@ -58,6 +68,7 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(Exception.class)
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	public CommonApiResponse<Void> handleException(Exception e) {
+		log.error("Unexpected error occurred", e);
 		return CommonApiResponse.fail(ErrorCode.INTERNAL_SERVER_ERROR);
 	}
 }
