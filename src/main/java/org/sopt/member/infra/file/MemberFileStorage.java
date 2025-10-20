@@ -6,6 +6,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,31 +50,35 @@ public class MemberFileStorage {
 	}
 
 	public void save(List<Member> members) {
-		File file = new File(filePath);
-		File tempFile = new File(filePath + ".tmp");
-		File parentDir = file.getParentFile();
+		Path targetPath = Path.of(filePath);
+		Path tempPath = Path.of(filePath + ".tmp");
+		File parentDir = targetPath.toFile().getParentFile();
 
 		if (parentDir != null && !parentDir.exists()) {
 			parentDir.mkdirs();
 		}
 
-		try (BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile))) {
+		try (BufferedWriter writer = new BufferedWriter(new FileWriter(tempPath.toFile()))) {
 			for (Member member : members) {
 				writer.write(formatMember(member));
 				writer.newLine();
 			}
-
-			if (file.exists() && !file.delete()) {
-				throw new DataAccessException(ErrorCode.DATA_DELETE_ERROR);
-			}
-			if (!tempFile.renameTo(file)) {
-				throw new DataAccessException(ErrorCode.DATA_MOVE_ERROR);
-			}
 		} catch (IOException e) {
-			if (tempFile.exists()) {
-				tempFile.delete();
+			try {
+				Files.deleteIfExists(tempPath);
+			} catch (IOException ex) {
 			}
 			throw new DataAccessException(ErrorCode.DATA_WRITE_ERROR);
+		}
+
+		try {
+			Files.move(tempPath, targetPath, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
+		} catch (IOException e) {
+			try {
+				Files.deleteIfExists(tempPath);
+			} catch (IOException ex) {
+			}
+			throw new DataAccessException(ErrorCode.DATA_MOVE_ERROR);
 		}
 	}
 
