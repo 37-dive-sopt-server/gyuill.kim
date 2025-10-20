@@ -13,8 +13,11 @@ import io.swagger.v3.oas.models.OpenAPI;
 @Configuration
 public class SwaggerConfig {
 
-	@Value("${spring.swagger.base-url}")
-	private String baseUrl;
+	private final String baseUrl;
+
+	public SwaggerConfig(@Value("${spring.swagger.base-url}") String baseUrl) {
+		this.baseUrl = baseUrl;
+	}
 
 	@Bean
 	public OpenAPI openAPI() {
