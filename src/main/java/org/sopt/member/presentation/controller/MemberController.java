@@ -10,14 +10,12 @@ import org.sopt.global.response.success.SuccessCode;
 import org.sopt.member.application.dto.MemberCreateRequest;
 import org.sopt.member.application.dto.MemberResponse;
 import org.sopt.member.application.service.MemberService;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -37,7 +35,6 @@ public class MemberController {
 	}
 
 	@PostMapping
-	@ResponseStatus(HttpStatus.CREATED)
 	@SuccessCodeAnnotation(SuccessCode.MEMBER_CREATED)
 	@Operation(summary = "회원 가입", description = "새로운 회원을 등록합니다.")
 	@ApiExceptions({ErrorCode.DUPLICATE_EMAIL, ErrorCode.INVALID_INPUT, ErrorCode.INVALID_FORMAT})
