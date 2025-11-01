@@ -28,7 +28,7 @@ public class CommonApiResponse<T> {
 		return new CommonApiResponse<>(errorType.getCode(), errorType.getMessage(), null);
 	}
 
-	public static <T> CommonApiResponse<T> failWithDetails(ErrorType errorType, T details) {
+	public static <T> CommonApiResponse<T> fail(ErrorType errorType, T details) {
 		return new CommonApiResponse<>(errorType.getCode(), errorType.getMessage(), details);
 	}
 

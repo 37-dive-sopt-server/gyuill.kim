@@ -39,6 +39,7 @@ public enum ErrorCode implements ErrorType {
 		return message;
 	}
 
+	@Override
 	public int getStatus() {
 		return status;
 	}

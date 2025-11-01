@@ -40,7 +40,7 @@ public class GlobalExceptionHandler {
 	public CommonApiResponse<Map<String, String>> handleIllegalArgumentException(IllegalArgumentException e) {
 		log.warn("Validation failed: {}", e.getMessage());
 		Map<String, String> error = Map.of("message", e.getMessage());
-		return CommonApiResponse.failWithDetails(ErrorCode.INVALID_INPUT, error);
+		return CommonApiResponse.fail(ErrorCode.INVALID_INPUT, error);
 	}
 
 	// JSON 파싱 실패 처리 (enum, 날짜 형식 등)
@@ -61,7 +61,7 @@ public class GlobalExceptionHandler {
 			errorDetails.put("body", "요청 데이터를 읽을 수 없습니다");
 		}
 
-		return CommonApiResponse.failWithDetails(ErrorCode.INVALID_FORMAT, errorDetails);
+		return CommonApiResponse.fail(ErrorCode.INVALID_FORMAT, errorDetails);
 	}
 
 	// 그 외 모든 예외 처리
