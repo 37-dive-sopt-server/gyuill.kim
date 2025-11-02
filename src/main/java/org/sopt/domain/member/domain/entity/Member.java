@@ -1,8 +1,8 @@
-package org.sopt.member.domain.entity;
+package org.sopt.domain.member.domain.entity;
 
 import java.time.LocalDate;
 
-import org.sopt.member.application.dto.MemberCreateRequest;
+import org.sopt.domain.member.application.dto.MemberCreateRequest;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

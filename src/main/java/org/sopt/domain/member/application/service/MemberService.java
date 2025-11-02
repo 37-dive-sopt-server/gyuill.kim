@@ -1,14 +1,14 @@
-package org.sopt.member.application.service;
+package org.sopt.domain.member.application.service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.sopt.global.exception.BaseException;
 import org.sopt.global.response.error.ErrorCode;
-import org.sopt.member.application.dto.MemberCreateRequest;
-import org.sopt.member.application.dto.MemberResponse;
-import org.sopt.member.domain.entity.Member;
-import org.sopt.member.domain.repository.MemberRepository;
+import org.sopt.domain.member.application.dto.MemberCreateRequest;
+import org.sopt.domain.member.application.dto.MemberResponse;
+import org.sopt.domain.member.domain.entity.Member;
+import org.sopt.domain.member.domain.repository.MemberRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

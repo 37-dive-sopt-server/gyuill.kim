@@ -1,10 +1,10 @@
-package org.sopt.member.application.dto;
+package org.sopt.domain.member.application.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import org.sopt.member.domain.entity.Gender;
+import org.sopt.domain.member.domain.entity.Gender;
 
 import java.time.LocalDate;
 

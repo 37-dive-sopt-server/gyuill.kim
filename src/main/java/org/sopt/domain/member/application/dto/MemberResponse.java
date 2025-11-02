@@ -1,7 +1,7 @@
-package org.sopt.member.application.dto;
+package org.sopt.domain.member.application.dto;
 
-import org.sopt.member.domain.entity.Gender;
-import org.sopt.member.domain.entity.Member;
+import org.sopt.domain.member.domain.entity.Gender;
+import org.sopt.domain.member.domain.entity.Member;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 

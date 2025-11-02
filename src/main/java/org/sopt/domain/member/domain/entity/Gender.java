@@ -1,4 +1,4 @@
-package org.sopt.member.domain.entity;
+package org.sopt.domain.member.domain.entity;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -17,9 +17,5 @@ public enum Gender {
 
 	Gender(String description) {
 		this.description = description;
-	}
-
-	public String getDescription() {
-		return description;
 	}
 }

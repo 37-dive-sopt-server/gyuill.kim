@@ -1,4 +1,4 @@
-package org.sopt.member.presentation.controller;
+package org.sopt.domain.member.presentation.controller;
 
 import java.util.List;
 
@@ -7,9 +7,9 @@ import org.sopt.global.annotation.AutoApiResponse;
 import org.sopt.global.annotation.SuccessCodeAnnotation;
 import org.sopt.global.response.error.ErrorCode;
 import org.sopt.global.response.success.SuccessCode;
-import org.sopt.member.application.dto.MemberCreateRequest;
-import org.sopt.member.application.dto.MemberResponse;
-import org.sopt.member.application.service.MemberService;
+import org.sopt.domain.member.application.dto.MemberCreateRequest;
+import org.sopt.domain.member.application.dto.MemberResponse;
+import org.sopt.domain.member.application.service.MemberService;
 import org.springframework.web.bind.annotation.*;
 
 import io.swagger.v3.oas.annotations.Operation;
