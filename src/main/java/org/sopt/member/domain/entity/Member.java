@@ -2,47 +2,52 @@ package org.sopt.member.domain.entity;
 
 import java.time.LocalDate;
 
-public record Member(Long id, String name, LocalDate birthDate, String email, Gender gender) {
+import org.sopt.member.application.dto.MemberCreateRequest;
 
-	public Member {
-		validateName(name);
-		validateBirthDate(birthDate);
-		validateEmail(email);
-		validateGender(gender);
-	}
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-	private void validateName(String name) {
-		if (name == null || name.trim().isEmpty()) {
-			throw new IllegalArgumentException("이름을 입력해주세요");
-		}
-	}
+@Entity
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class Member {
 
-	private void validateBirthDate(LocalDate birthDate) {
-		if (birthDate == null) {
-			throw new IllegalArgumentException("생년월일을 입력해주세요");
-		}
-		if (birthDate.isAfter(LocalDate.now())) {
-			throw new IllegalArgumentException("생년월일은 과거 날짜여야 합니다");
-		}
-		int age = LocalDate.now().getYear() - birthDate.getYear();
-		if (age < 20) {
-			throw new IllegalArgumentException("20세 미만은 회원 가입이 불가능합니다");
-		}
-	}
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	private void validateEmail(String email) {
-		if (email == null || email.trim().isEmpty()) {
-			throw new IllegalArgumentException("이메일을 입력해주세요");
-		}
-		String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
-		if (!email.matches(emailRegex)) {
-			throw new IllegalArgumentException("유효한 이메일 형식이 아닙니다");
-		}
-	}
+    private String name;
+    private LocalDate birthDate;
+    private String email;
+    private Gender gender;
 
-	private void validateGender(Gender gender) {
-		if (gender == null) {
-			throw new IllegalArgumentException("성별을 선택해주세요");
-		}
-	}
+    private Member(String name, LocalDate birthDate, String email, Gender gender) {
+        validateBirthDate(birthDate);
+        this.name = name;
+        this.birthDate = birthDate;
+        this.email = email;
+        this.gender = gender;
+    }
+
+    public static Member create(MemberCreateRequest request) {
+        return new Member(request.name(), request.birthDate(), request.email(), request.gender());
+    }
+
+    private void validateBirthDate(LocalDate birthDate) {
+        if (birthDate == null) {
+            throw new IllegalArgumentException("생년월일을 입력해주세요");
+        }
+        if (birthDate.isAfter(LocalDate.now())) {
+            throw new IllegalArgumentException("생년월일은 과거 날짜여야 합니다");
+        }
+        int age = LocalDate.now().getYear() - birthDate.getYear();
+        if (age < 20) {
+            throw new IllegalArgumentException("20세 미만은 회원 가입이 불가능합니다");
+        }
+    }
 }

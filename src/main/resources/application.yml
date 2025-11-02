@@ -6,6 +6,22 @@ server:
     include-exception: true
 
 spring:
+  application:
+    name: assignment
+  datasource:
+    url: jdbc:mysql://localhost:3306/assignment
+    username: root
+    password: rb87568756
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        format_sql: true
+    show-sql: true
   swagger:
     base-url: http://localhost:8080
 
@@ -24,3 +40,5 @@ springdoc:
 member:
   file:
     path: data/members.csv
+
+
