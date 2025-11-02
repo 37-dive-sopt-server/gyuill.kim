@@ -9,6 +9,8 @@ import org.sopt.domain.member.application.dto.MemberCreateRequest;
 import org.sopt.domain.member.application.dto.MemberResponse;
 import org.sopt.domain.member.domain.entity.Member;
 import org.sopt.domain.member.domain.repository.MemberRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,7 +30,12 @@ public class MemberService {
             throw new BaseException(ErrorCode.DUPLICATE_EMAIL);
         }
 
-        Member member = Member.create(request);
+        Member member = Member.create(
+                request.name(),
+                request.birthDate(),
+                request.email(),
+                request.gender()
+        );
         memberRepository.save(member);
         return MemberResponse.from(member);
     }
@@ -39,16 +46,16 @@ public class MemberService {
         return MemberResponse.from(member);
     }
 
-    public List<MemberResponse> findAllMembers() {
-        return memberRepository.findAll().stream()
-                .map(MemberResponse::from)
-                .collect(Collectors.toList());
+    public Page<MemberResponse> findAllMembers(Pageable pageable) {
+        return memberRepository.findAll(pageable)
+                .map(MemberResponse::from);
     }
 
     @Transactional
-    public void deleteMember(String email) {
-        Member member = memberRepository.findByEmail(email)
-                .orElseThrow(() -> new BaseException(ErrorCode.MEMBER_NOT_FOUND));
-        memberRepository.deleteByEmail(member.getEmail());
+    public void deleteMember(Long memberId) {
+        if (!memberRepository.existsById(memberId)) {
+            throw new BaseException(ErrorCode.MEMBER_NOT_FOUND);
+        }
+        memberRepository.deleteById(memberId);
     }
 }

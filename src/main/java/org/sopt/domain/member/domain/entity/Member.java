@@ -2,9 +2,10 @@ package org.sopt.domain.member.domain.entity;
 
 import java.time.LocalDate;
 
-import org.sopt.domain.member.application.dto.MemberCreateRequest;
-
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.EnumType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -21,9 +22,17 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false, length = 50)
     private String name;
+
+    @Column(nullable = false)
     private LocalDate birthDate;
+
+    @Column(nullable = false, unique = true, length = 100)
     private String email;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private Gender gender;
 
     private Member(String name, LocalDate birthDate, String email, Gender gender) {
@@ -34,8 +43,8 @@ public class Member {
         this.gender = gender;
     }
 
-    public static Member create(MemberCreateRequest request) {
-        return new Member(request.name(), request.birthDate(), request.email(), request.gender());
+    public static Member create(String name, LocalDate birthDate, String email, Gender gender) {
+        return new Member(name, birthDate, email, gender);
     }
 
     private void validateBirthDate(LocalDate birthDate) {
