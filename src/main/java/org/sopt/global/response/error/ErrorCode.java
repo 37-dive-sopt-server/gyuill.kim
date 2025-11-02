@@ -6,6 +6,9 @@ public enum ErrorCode implements ErrorType {
 	MEMBER_NOT_FOUND("M401", "회원을 찾을 수 없습니다", 404),
 	DUPLICATE_EMAIL("M402", "이미 가입된 이메일입니다", 400),
 	INVALID_BIRTH_DATE("M403", "생년월일이 유효하지 않습니다", 400),
+	BIRTH_DATE_REQUIRED("M404", "생년월일을 입력해주세요", 400),
+	BIRTH_DATE_FUTURE("M405", "생년월일은 과거 날짜여야 합니다", 400),
+	AGE_UNDER_20("M406", "20세 미만은 회원 가입이 불가능합니다", 400),
 
 	// 공통 에러
 	INVALID_INPUT("C001", "입력값이 올바르지 않습니다", 400),

@@ -1,11 +1,11 @@
 package org.sopt.domain.member.application.dto;
 
+import java.time.LocalDate;
+
 import org.sopt.domain.member.domain.entity.Gender;
 import org.sopt.domain.member.domain.entity.Member;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-
-import java.time.LocalDate;
 
 @Schema(description = "회원 정보 응답")
 public record MemberResponse(
@@ -24,7 +24,7 @@ public record MemberResponse(
         @Schema(description = "성별", example = "MALE")
         Gender gender
 ) {
-    public static MemberResponse from(Member member) {
+    public static MemberResponse fromEntity(Member member) {
         return new MemberResponse(
                 member.getId(),
                 member.getName(),

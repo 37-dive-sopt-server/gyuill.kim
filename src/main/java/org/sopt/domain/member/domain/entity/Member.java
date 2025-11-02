@@ -36,7 +36,6 @@ public class Member {
     private Gender gender;
 
     private Member(String name, LocalDate birthDate, String email, Gender gender) {
-        validateBirthDate(birthDate);
         this.name = name;
         this.birthDate = birthDate;
         this.email = email;
@@ -45,18 +44,5 @@ public class Member {
 
     public static Member create(String name, LocalDate birthDate, String email, Gender gender) {
         return new Member(name, birthDate, email, gender);
-    }
-
-    private void validateBirthDate(LocalDate birthDate) {
-        if (birthDate == null) {
-            throw new IllegalArgumentException("생년월일을 입력해주세요");
-        }
-        if (birthDate.isAfter(LocalDate.now())) {
-            throw new IllegalArgumentException("생년월일은 과거 날짜여야 합니다");
-        }
-        int age = LocalDate.now().getYear() - birthDate.getYear();
-        if (age < 20) {
-            throw new IllegalArgumentException("20세 미만은 회원 가입이 불가능합니다");
-        }
     }
 }
