@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -58,10 +59,15 @@ public class ArticleController {
 
     @GetMapping
     @SuccessCodeAnnotation(SuccessCode.ARTICLE_VIEW)
-    @Operation(summary = "전체 게시글 조회", description = "등록된 모든 게시글을 페이징하여 조회합니다.")
+    @Operation(summary = "게시글 조회 및 검색", description = "등록된 게시글을 조회합니다. keyword를 입력하면 제목 또는 작성자 이름으로 검색합니다.")
     public Page<ArticleResponse> getAllArticles(
+            @Parameter(description = "검색 키워드 (제목 또는 작성자 이름)", example = "Spring")
+            @RequestParam(required = false) String keyword,
             @PageableDefault(size = 20) Pageable pageable
     ) {
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            return articleService.searchArticles(keyword, pageable);
+        }
         return articleService.findAllArticles(pageable);
     }
 }
