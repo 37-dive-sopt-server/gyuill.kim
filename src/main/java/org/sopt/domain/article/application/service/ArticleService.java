@@ -28,6 +28,11 @@ public class ArticleService {
 
     @Transactional
     public ArticleResponse create(ArticleCreateRequest request) {
+
+        if(articleRepository.existsByTitle(request.title())) {
+            throw new ArticleException(ErrorCode.DUPLICATE_ARTICLE_TITLE);
+        }
+
         Member author = memberRepository.findById(request.authorId())
                 .orElseThrow(() -> new MemberException(ErrorCode.MEMBER_NOT_FOUND));
 
