@@ -10,6 +10,10 @@ public enum ErrorCode implements ErrorType {
 	BIRTH_DATE_FUTURE("M405", "생년월일은 과거 날짜여야 합니다", 400),
 	AGE_UNDER_20("M406", "20세 미만은 회원 가입이 불가능합니다", 400),
 
+	// 게시글 관련 에러
+	ARTICLE_NOT_FOUND("A401", "게시글을 찾을 수 없습니다", 404),
+	ARTICLE_AUTHOR_NOT_FOUND("A402", "게시글 작성자를 찾을 수 없습니다", 404),
+
 	// 공통 에러
 	INVALID_INPUT("C001", "입력값이 올바르지 않습니다", 400),
 	INVALID_FORMAT("C002", "데이터 형식이 올바르지 않습니다", 400),

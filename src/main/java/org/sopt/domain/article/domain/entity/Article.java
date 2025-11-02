@@ -10,9 +10,11 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Article extends BaseTimeEntity {
 
@@ -26,4 +28,15 @@ public class Article extends BaseTimeEntity {
 	private Tag tag;
 	private String title;
 	private String content;
+
+	private Article(Member author, String title, String content, Tag tag) {
+		this.author = author;
+		this.title = title;
+		this.content = content;
+		this.tag = tag;
+	}
+
+	public static Article create(Member author, String title, String content, Tag tag) {
+		return new Article(author, title, content, tag);
+	}
 }
