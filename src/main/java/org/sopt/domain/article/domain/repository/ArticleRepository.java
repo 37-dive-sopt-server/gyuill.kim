@@ -10,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 public interface ArticleRepository extends JpaRepository<Article, Long> {
 	boolean existsByTitle(String title);
 
-	// 제목 또는 작성자 이름으로 검색 (하나의 키워드로 둘 다 검색)
-	@Query("SELECT a FROM Article a WHERE a.title LIKE %:keyword% OR a.author.name LIKE %:keyword%")
+	@Query(value = "SELECT a FROM Article a JOIN FETCH a.author WHERE a.title LIKE %:keyword% OR a.author.name LIKE %:keyword%",
+		   countQuery = "SELECT COUNT(a) FROM Article a WHERE a.title LIKE %:keyword% OR a.author.name LIKE %:keyword%")
 	Page<Article> findByTitleOrAuthorNameContaining(@Param("keyword") String keyword, Pageable pageable);
 }
