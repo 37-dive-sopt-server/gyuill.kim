@@ -7,6 +7,7 @@ import org.sopt.domain.member.domain.repository.MemberRepository;
 import org.sopt.domain.member.domain.service.MemberValidator;
 import org.sopt.domain.member.exception.MemberException;
 import org.sopt.global.response.error.ErrorCode;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,7 @@ public class MemberService {
     }
 
     @Transactional
-    public MemberResponse join(MemberCreateRequest request) {
+    public MemberResponse create(MemberCreateRequest request) {
         if (memberRepository.existsByEmail(request.email())) {
             throw new MemberException(ErrorCode.DUPLICATE_EMAIL);
         }
@@ -36,11 +37,17 @@ public class MemberService {
                 request.email(),
                 request.gender()
         );
-        memberRepository.save(member);
+
+        try {
+            memberRepository.save(member);
+        } catch (DataIntegrityViolationException e) {
+            throw new MemberException(ErrorCode.DUPLICATE_EMAIL);
+        }
+
         return MemberResponse.fromEntity(member);
     }
 
-    public MemberResponse findMember(Long memberId) {
+    public MemberResponse getMemberById(Long memberId) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberException(ErrorCode.MEMBER_NOT_FOUND));
         return MemberResponse.fromEntity(member);
@@ -53,9 +60,8 @@ public class MemberService {
 
     @Transactional
     public void deleteMember(Long memberId) {
-        if (!memberRepository.existsById(memberId)) {
-            throw new MemberException(ErrorCode.MEMBER_NOT_FOUND);
-        }
-        memberRepository.deleteById(memberId);
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberException(ErrorCode.MEMBER_NOT_FOUND));
+        memberRepository.delete(member);
     }
 }

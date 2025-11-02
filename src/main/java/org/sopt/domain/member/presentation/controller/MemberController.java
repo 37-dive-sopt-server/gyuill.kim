@@ -1,19 +1,23 @@
 package org.sopt.domain.member.presentation.controller;
 
-import java.util.List;
-
+import org.sopt.domain.member.application.dto.MemberCreateRequest;
+import org.sopt.domain.member.application.dto.MemberResponse;
+import org.sopt.domain.member.application.service.MemberService;
 import org.sopt.global.annotation.ApiExceptions;
 import org.sopt.global.annotation.AutoApiResponse;
 import org.sopt.global.annotation.SuccessCodeAnnotation;
 import org.sopt.global.response.error.ErrorCode;
 import org.sopt.global.response.success.SuccessCode;
-import org.sopt.domain.member.application.dto.MemberCreateRequest;
-import org.sopt.domain.member.application.dto.MemberResponse;
-import org.sopt.domain.member.application.service.MemberService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -35,12 +39,12 @@ public class MemberController {
 	@PostMapping
 	@SuccessCodeAnnotation(SuccessCode.MEMBER_CREATED)
 	@Operation(summary = "회원 가입", description = "새로운 회원을 등록합니다.")
-	@ApiExceptions({ErrorCode.DUPLICATE_EMAIL, ErrorCode.INVALID_INPUT, ErrorCode.INVALID_FORMAT})
+	@ApiExceptions({ErrorCode.DUPLICATE_EMAIL, ErrorCode.INVALID_INPUT, ErrorCode.INVALID_FORMAT, ErrorCode.BIRTH_DATE_REQUIRED, ErrorCode.BIRTH_DATE_FUTURE, ErrorCode.AGE_UNDER_20})
 	public MemberResponse createMember(
 		@Parameter(description = "회원 가입 정보", required = true)
 		@Valid @RequestBody MemberCreateRequest request
 	) {
-		return memberService.join(request);
+		return memberService.create(request);
 	}
 
 	@GetMapping("/{id}")
@@ -51,7 +55,7 @@ public class MemberController {
 		@Parameter(description = "회원 ID", required = true, example = "1")
 		@PathVariable Long id
 	) {
-		return memberService.findMember(id);
+		return memberService.getMemberById(id);
 	}
 
 	@GetMapping
