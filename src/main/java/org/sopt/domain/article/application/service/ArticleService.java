@@ -14,17 +14,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
 @Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class ArticleService {
 
     private final ArticleRepository articleRepository;
     private final MemberRepository memberRepository;
-
-    public ArticleService(ArticleRepository articleRepository, MemberRepository memberRepository) {
-        this.articleRepository = articleRepository;
-        this.memberRepository = memberRepository;
-    }
 
     @Transactional
     public ArticleResponse create(ArticleCreateRequest request) {

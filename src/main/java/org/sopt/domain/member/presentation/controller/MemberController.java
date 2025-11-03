@@ -23,7 +23,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/members")
 @AutoApiResponse
@@ -31,10 +33,6 @@ import jakarta.validation.Valid;
 public class MemberController {
 
 	private final MemberService memberService;
-
-	public MemberController(MemberService memberService) {
-		this.memberService = memberService;
-	}
 
 	@PostMapping
 	@SuccessCodeAnnotation(SuccessCode.MEMBER_CREATED)

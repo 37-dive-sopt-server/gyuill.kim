@@ -23,18 +23,16 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/articles")
 @AutoApiResponse
+@RequiredArgsConstructor
 @Tag(name = "Article", description = "게시글 관리 API")
 public class ArticleController {
 
     private final ArticleService articleService;
-
-    public ArticleController(ArticleService articleService) {
-        this.articleService = articleService;
-    }
 
     @PostMapping
     @SuccessCodeAnnotation(SuccessCode.ARTICLE_CREATED)

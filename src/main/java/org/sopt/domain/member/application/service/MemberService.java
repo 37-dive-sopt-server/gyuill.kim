@@ -13,17 +13,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
 @Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class MemberService {
 
     private final MemberRepository memberRepository;
     private final MemberValidator memberValidator;
-
-    public MemberService(MemberRepository memberRepository, MemberValidator memberValidator) {
-        this.memberRepository = memberRepository;
-        this.memberValidator = memberValidator;
-    }
 
     @Transactional
     public MemberResponse create(MemberCreateRequest request) {
