@@ -49,7 +49,7 @@ public class ArticleService {
     }
 
     public ArticleResponse getArticleById(Long articleId) {
-        Article article = articleRepository.findById(articleId)
+        Article article = articleRepository.findByIdWithAuthor(articleId)
                 .orElseThrow(() -> new ArticleException(ErrorCode.ARTICLE_NOT_FOUND));
         return ArticleResponse.fromEntity(article);
     }
