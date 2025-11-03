@@ -63,4 +63,11 @@ public class ArticleService {
         return articleRepository.findByTitleOrAuthorNameContaining(keyword, pageable)
                 .map(ArticleResponse::fromEntity);
     }
+
+    public Page<ArticleResponse> getArticles(String keyword, Pageable pageable) {
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            return searchArticles(keyword, pageable);
+        }
+        return findAllArticles(pageable);
+    }
 }

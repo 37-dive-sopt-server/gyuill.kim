@@ -66,9 +66,6 @@ public class ArticleController {
             @RequestParam(required = false) String keyword,
             @PageableDefault(size = 20) Pageable pageable
     ) {
-        if (keyword != null && !keyword.trim().isEmpty()) {
-            return articleService.searchArticles(keyword, pageable);
-        }
-        return articleService.findAllArticles(pageable);
+        return articleService.getArticles(keyword, pageable);
     }
 }

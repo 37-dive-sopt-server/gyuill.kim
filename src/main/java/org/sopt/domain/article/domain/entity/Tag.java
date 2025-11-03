@@ -1,5 +1,8 @@
 package org.sopt.domain.article.domain.entity;
 
+import lombok.Getter;
+
+@Getter
 public enum Tag {
 	CS("Computer Science"),
 	DB("Database"),
@@ -7,6 +10,7 @@ public enum Tag {
 	ETC("Etcetera");
 
 	private final String description;
+
 	Tag(String description) {
 		this.description = description;
 	}
