@@ -55,7 +55,7 @@ public class ArticleService {
     }
 
     public Page<ArticleResponse> findAllArticles(Pageable pageable) {
-        return articleRepository.findAll(pageable)
+        return articleRepository.findAllWithAuthor(pageable)
                 .map(ArticleResponse::fromEntity);
     }
 
