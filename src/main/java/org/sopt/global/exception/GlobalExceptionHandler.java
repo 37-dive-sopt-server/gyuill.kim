@@ -12,6 +12,8 @@ import org.sopt.global.response.error.ErrorType;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -34,7 +36,22 @@ public class GlobalExceptionHandler {
 			.body(CommonApiResponse.fail(errorType));
 	}
 
-	// 입력 값 검증 실패 처리 (Member validation 등)
+	// @Valid 검증 실패 처리 (DTO validation)
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public CommonApiResponse<Map<String, String>> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+		Map<String, String> errors = e.getBindingResult()
+			.getFieldErrors()
+			.stream()
+			.collect(Collectors.toMap(
+				FieldError::getField,
+				fieldError -> fieldError.getDefaultMessage() != null ? fieldError.getDefaultMessage() : "유효하지 않은 값입니다"
+			));
+		log.warn("Validation failed: {}", errors);
+		return CommonApiResponse.fail(ErrorCode.INVALID_INPUT, errors);
+	}
+
+	// 입력 값 검증 실패 처리 (Domain validation 등)
 	@ExceptionHandler(IllegalArgumentException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public CommonApiResponse<Map<String, String>> handleIllegalArgumentException(IllegalArgumentException e) {

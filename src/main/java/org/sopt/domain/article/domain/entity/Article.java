@@ -1,0 +1,52 @@
+package org.sopt.domain.article.domain.entity;
+
+import org.sopt.domain.member.domain.entity.Member;
+import org.sopt.global.entity.BaseTimeEntity;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@Entity
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "article")
+public class Article extends BaseTimeEntity {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Member author;
+
+	@Enumerated(EnumType.STRING)
+	private Tag tag;
+
+	@Column(unique = true, nullable = false)
+	private String title;
+
+	@Column(columnDefinition = "TEXT")
+	private String content;
+
+	private Article(Member author, String title, String content, Tag tag) {
+		this.author = author;
+		this.title = title;
+		this.content = content;
+		this.tag = tag;
+	}
+
+	public static Article create(Member author, String title, String content, Tag tag) {
+		return new Article(author, title, content, tag);
+	}
+}

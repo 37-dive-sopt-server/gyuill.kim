@@ -6,7 +6,10 @@ public enum SuccessCode implements SuccessType {
 	MEMBER_EMAIL_CHECK_OK("M201", "이메일 사용 가능"),
 	MEMBER_CREATED("M202", "회원가입 성공"),
 	MEMBER_DELETED("M203", "회원 삭제 성공"),
-	MEMBER_VIEW("M204", "회원 정보 조회 성공");
+	MEMBER_VIEW("M204", "회원 정보 조회 성공"),
+
+	ARTICLE_CREATED("A201", "게시글 작성 성공"),
+	ARTICLE_VIEW("A202", "게시글 조회 성공");
 
 	private final String code;
 	private final String message;
