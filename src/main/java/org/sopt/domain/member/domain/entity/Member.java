@@ -29,6 +29,9 @@ public class Member extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false, length = 100)
+    private String password;
+
     @Column(nullable = false, length = 50)
     private String name;
 
@@ -42,14 +45,15 @@ public class Member extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
-    private Member(String name, LocalDate birthDate, String email, Gender gender) {
+    private Member(String password, String name, LocalDate birthDate, String email, Gender gender) {
+        this.password = password;
         this.name = name;
         this.birthDate = birthDate;
         this.email = email;
         this.gender = gender;
     }
 
-    public static Member create(String name, LocalDate birthDate, String email, Gender gender) {
-        return new Member(name, birthDate, email, gender);
+    public static Member create(String password, String name, LocalDate birthDate, String email, Gender gender) {
+        return new Member(password, name, birthDate, email, gender);
     }
 }

@@ -24,8 +24,8 @@ public class MemberValidator {
         }
     }
 
-    public Member createValidatedMember(String name, LocalDate birthDate, String email, Gender gender) {
+    public Member createValidatedMember(String password, String name, LocalDate birthDate, String email, Gender gender) {
         validateBirthDate(birthDate);
-        return Member.create(name, birthDate, email, gender);
+        return Member.create(password, name, birthDate, email, gender);
     }
 }
