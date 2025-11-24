@@ -16,55 +16,55 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class JwtProvider {
 
-    private final JwtProperties jwtProperties;
+	private final JwtProperties jwtProperties;
 
-    public String generateAccessToken(Long userId) {
-        Instant now = Instant.now();
-        Instant expiryDate = now.plusSeconds(jwtProperties.getExpiresInSeconds());
+	public String generateAccessToken(Long userId) {
+		Instant now = Instant.now();
+		Instant expiryDate = now.plusSeconds(jwtProperties.getExpiresInSeconds());
 
-        return JWT.create()
-                .withSubject(String.valueOf(userId))
-                .withIssuedAt(Date.from(now))
-                .withExpiresAt(Date.from(expiryDate))
-                .sign(Algorithm.HMAC256(jwtProperties.getSecret()));
-    }
+		return JWT.create()
+			.withSubject(String.valueOf(userId))
+			.withIssuedAt(Date.from(now))
+			.withExpiresAt(Date.from(expiryDate))
+			.sign(Algorithm.HMAC256(jwtProperties.getSecret()));
+	}
 
-    public String generateRefreshToken(Long userId) {
-        Instant now = Instant.now();
-        Instant expiryDate = now.plusSeconds(jwtProperties.getRefreshExpiresInSeconds());
+	public String generateRefreshToken(Long userId) {
+		Instant now = Instant.now();
+		Instant expiryDate = now.plusSeconds(jwtProperties.getRefreshExpiresInSeconds());
 
-        return JWT.create()
-                .withSubject(String.valueOf(userId))
-                .withIssuedAt(Date.from(now))
-                .withExpiresAt(Date.from(expiryDate))
-                .sign(Algorithm.HMAC256(jwtProperties.getSecret()));
-    }
+		return JWT.create()
+			.withSubject(String.valueOf(userId))
+			.withIssuedAt(Date.from(now))
+			.withExpiresAt(Date.from(expiryDate))
+			.sign(Algorithm.HMAC256(jwtProperties.getSecret()));
+	}
 
-    public boolean validateToken(String token) {
-        try {
-            JWT.require(Algorithm.HMAC256(jwtProperties.getSecret()))
-                    .build()
-                    .verify(token);
-            return true;
-        } catch (JWTVerificationException e) {
-            return false;
-        }
-    }
+	public boolean validateToken(String token) {
+		try {
+			JWT.require(Algorithm.HMAC256(jwtProperties.getSecret()))
+				.build()
+				.verify(token);
+			return true;
+		} catch (JWTVerificationException e) {
+			return false;
+		}
+	}
 
-    public Long getUserIdFromToken(String token) {
-        DecodedJWT decodedJWT = JWT.require(Algorithm.HMAC256(jwtProperties.getSecret()))
-                .build()
-                .verify(token);
-        return Long.parseLong(decodedJWT.getSubject());
-    }
+	public Long getUserIdFromToken(String token) {
+		DecodedJWT decodedJWT = JWT.require(Algorithm.HMAC256(jwtProperties.getSecret()))
+			.build()
+			.verify(token);
+		return Long.parseLong(decodedJWT.getSubject());
+	}
 
-    public boolean isTokenExpired(String token) {
-        try {
-            DecodedJWT decodedJWT = JWT.decode(token);
-            return decodedJWT.getExpiresAt().before(new Date());
-        } catch (Exception e) {
-            return true;
-        }
-    }
+	public boolean isTokenExpired(String token) {
+		try {
+			DecodedJWT decodedJWT = JWT.decode(token);
+			return decodedJWT.getExpiresAt().before(new Date());
+		} catch (Exception e) {
+			return true;
+		}
+	}
 }
 

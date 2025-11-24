@@ -5,11 +5,11 @@ import org.sopt.global.response.error.ErrorCode;
 
 public class AuthException extends BaseException {
 
-    public AuthException(ErrorCode errorCode) {
-        super(errorCode);
-    }
+	public AuthException(ErrorCode errorCode) {
+		super(errorCode);
+	}
 
-    public AuthException(ErrorCode errorCode, String detail) {
-        super(errorCode, detail);
-    }
+	public AuthException(ErrorCode errorCode, String detail) {
+		super(errorCode, detail);
+	}
 }

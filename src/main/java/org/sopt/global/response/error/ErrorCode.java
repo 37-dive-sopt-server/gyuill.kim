@@ -27,8 +27,6 @@ public enum ErrorCode implements ErrorType {
 	ARTICLE_NOT_FOUND("A401", "게시글을 찾을 수 없습니다", 404),
 	DUPLICATE_ARTICLE_TITLE("A403", "이미 존재하는 게시글 제목입니다", 400);
 
-
-
 	private final String code;
 	private final String message;
 	private final int status;
