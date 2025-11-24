@@ -18,13 +18,12 @@ public class JwtProvider {
 
     private final JwtProperties jwtProperties;
 
-    public String generateAccessToken(Long userId, String email) {
+    public String generateAccessToken(Long userId) {
         Instant now = Instant.now();
         Instant expiryDate = now.plusSeconds(jwtProperties.getExpiresInSeconds());
 
         return JWT.create()
                 .withSubject(String.valueOf(userId))
-                .withClaim("email", email)
                 .withIssuedAt(Date.from(now))
                 .withExpiresAt(Date.from(expiryDate))
                 .sign(Algorithm.HMAC256(jwtProperties.getSecret()));

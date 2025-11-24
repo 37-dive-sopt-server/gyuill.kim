@@ -40,7 +40,7 @@ public class AuthService {
             throw new AuthException(ErrorCode.LOGIN_FAIL);
         }
 
-        String accessToken = jwtProvider.generateAccessToken(member.getId(), member.getEmail());
+        String accessToken = jwtProvider.generateAccessToken(member.getId());
         String refreshToken = jwtProvider.generateRefreshToken(member.getId());
 
         LocalDateTime expiryDate = LocalDateTime.now()
@@ -74,7 +74,7 @@ public class AuthService {
 
         refreshToken.markAsBlacklisted();
 
-        String newAccessToken = jwtProvider.generateAccessToken(member.getId(), member.getEmail());
+        String newAccessToken = jwtProvider.generateAccessToken(member.getId());
         String newRefreshToken = jwtProvider.generateRefreshToken(member.getId());
 
         LocalDateTime expiryDate = LocalDateTime.now()
