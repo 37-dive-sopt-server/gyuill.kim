@@ -99,20 +99,23 @@ public class AuthService {
     }
 
     public void validateRefreshToken(String token) {
+        // 1. JWT 만료 여부 체크
+        if (jwtProvider.isTokenExpired(token)) {
+            throw new AuthException(ErrorCode.TOKEN_EXPIRED);
+        }
+
+        // 2. JWT 서명 검증
         if (!jwtProvider.validateToken(token)) {
             throw new AuthException(ErrorCode.TOKEN_INVALID);
         }
 
+        // 3. DB에서 Refresh Token 조회 및 상태 확인
         RefreshToken refreshToken = refreshTokenRepository.findByToken(token)
                 .orElseThrow(() -> new AuthException(ErrorCode.REFRESH_TOKEN_NOT_FOUND));
 
-        if (!refreshToken.isValid()) {
-            if (refreshToken.isExpired()) {
-                throw new AuthException(ErrorCode.TOKEN_EXPIRED);
-            }
-            if (refreshToken.isBlacklisted()) {
-                throw new AuthException(ErrorCode.TOKEN_BLACKLISTED);
-            }
+        // 4. 블랙리스트 여부 체크
+        if (refreshToken.isBlacklisted()) {
+            throw new AuthException(ErrorCode.TOKEN_BLACKLISTED);
         }
     }
 }

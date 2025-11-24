@@ -1,15 +1,16 @@
 package org.sopt.global.auth.jwt;
 
+import java.time.Instant;
+import java.util.Date;
+
+import org.springframework.stereotype.Component;
+
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
 
-import java.time.Instant;
-import java.util.Date;
+import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
@@ -46,8 +47,6 @@ public class JwtProvider {
                     .build()
                     .verify(token);
             return true;
-        } catch (TokenExpiredException e) {
-            return false;
         } catch (JWTVerificationException e) {
             return false;
         }
@@ -60,13 +59,6 @@ public class JwtProvider {
         return Long.parseLong(decodedJWT.getSubject());
     }
 
-    public String getEmailFromToken(String token) {
-        DecodedJWT decodedJWT = JWT.require(Algorithm.HMAC256(jwtProperties.getSecret()))
-                .build()
-                .verify(token);
-        return decodedJWT.getClaim("email").asString();
-    }
-
     public boolean isTokenExpired(String token) {
         try {
             DecodedJWT decodedJWT = JWT.decode(token);
@@ -76,3 +68,4 @@ public class JwtProvider {
         }
     }
 }
+
