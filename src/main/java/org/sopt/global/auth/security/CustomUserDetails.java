@@ -15,6 +15,10 @@ public class CustomUserDetails implements UserDetails {
     private final String email;
     private final String password;
 
+    public Long getId() {
+        return id;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));

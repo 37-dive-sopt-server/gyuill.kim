@@ -6,11 +6,13 @@ import org.sopt.domain.member.application.service.MemberService;
 import org.sopt.global.annotation.ApiExceptions;
 import org.sopt.global.annotation.AutoApiResponse;
 import org.sopt.global.annotation.SuccessCodeAnnotation;
+import org.sopt.global.auth.security.CustomUserDetails;
 import org.sopt.global.response.error.ErrorCode;
 import org.sopt.global.response.success.SuccessCode;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -46,15 +48,14 @@ public class MemberController {
 		return memberService.create(request);
 	}
 
-	@GetMapping("/{id}")
+	@GetMapping("/me")
 	@SuccessCodeAnnotation(SuccessCode.MEMBER_VIEW)
-	@Operation(summary = "회원 조회", description = "ID로 특정 회원의 정보를 조회합니다.")
+	@Operation(summary = "내 정보 조회", description = "현재 로그인한 회원의 정보를 조회합니다.")
 	@ApiExceptions({ErrorCode.MEMBER_NOT_FOUND})
-	public MemberResponse getMemberById(
-		@Parameter(description = "회원 ID", required = true, example = "1")
-		@PathVariable Long id
+	public MemberResponse getMyInfo(
+		@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetails userDetails
 	) {
-		return memberService.getMemberById(id);
+		return memberService.getMemberById(userDetails.getId());
 	}
 
 	@GetMapping
@@ -66,14 +67,13 @@ public class MemberController {
 		return memberService.findAllMembers(pageable);
 	}
 
-	@DeleteMapping("/{id}")
+	@DeleteMapping("/me")
 	@SuccessCodeAnnotation(SuccessCode.MEMBER_DELETED)
-	@Operation(summary = "회원 삭제", description = "ID로 특정 회원을 삭제합니다.")
+	@Operation(summary = "회원 탈퇴", description = "현재 로그인한 회원을 삭제합니다.")
 	@ApiExceptions({ErrorCode.MEMBER_NOT_FOUND})
-	public void deleteMember(
-		@Parameter(description = "회원 ID", required = true, example = "1")
-		@PathVariable Long id
+	public void deleteMyAccount(
+		@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetails userDetails
 	) {
-		memberService.deleteMember(id);
+		memberService.deleteMember(userDetails.getId());
 	}
 }
