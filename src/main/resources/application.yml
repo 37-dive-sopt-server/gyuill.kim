@@ -29,6 +29,7 @@ security:
   jwt:
     secret: serverz-fighting-umm-umm....-yes-yes!!!!!
     expires-in-seconds: 3600
+    refresh-expires-in-seconds: 1209600
 
 logging:
   level:
