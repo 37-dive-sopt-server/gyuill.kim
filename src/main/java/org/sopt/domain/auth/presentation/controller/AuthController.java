@@ -1,9 +1,5 @@
 package org.sopt.domain.auth.presentation.controller;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.sopt.domain.auth.application.dto.LoginRequest;
 import org.sopt.domain.auth.application.dto.LoginResponse;
 import org.sopt.domain.auth.application.dto.TokenRefreshRequest;
@@ -14,7 +10,15 @@ import org.sopt.global.annotation.SuccessCodeAnnotation;
 import org.sopt.global.response.CommonApiResponse;
 import org.sopt.global.response.error.ErrorCode;
 import org.sopt.global.response.success.SuccessCode;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @Tag(name = "인증 API", description = "로그인, 토큰 갱신, 로그아웃 관련 API")
 @RestController
@@ -48,7 +52,7 @@ public class AuthController {
     @SuccessCodeAnnotation(SuccessCode.TOKEN_REFRESH_SUCCESS)
     @PostMapping("/refresh")
     public CommonApiResponse<TokenRefreshResponse> refreshToken(@Valid @RequestBody TokenRefreshRequest request) {
-        TokenRefreshResponse response = authService.refreshToken(request);
+        TokenRefreshResponse response = authService.renewalRefreshToken(request);
         return CommonApiResponse.success(SuccessCode.TOKEN_REFRESH_SUCCESS, response);
     }
 

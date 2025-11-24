@@ -1,6 +1,7 @@
 package org.sopt.domain.auth.application.service;
 
-import lombok.RequiredArgsConstructor;
+import java.time.LocalDateTime;
+
 import org.sopt.domain.auth.application.dto.LoginRequest;
 import org.sopt.domain.auth.application.dto.LoginResponse;
 import org.sopt.domain.auth.application.dto.TokenRefreshRequest;
@@ -17,7 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -59,24 +60,13 @@ public class AuthService {
     }
 
     @Transactional
-    public TokenRefreshResponse refreshToken(TokenRefreshRequest request) {
+    public TokenRefreshResponse renewalRefreshToken(TokenRefreshRequest request) {
         String requestToken = request.refreshToken();
 
-        if (!jwtProvider.validateToken(requestToken)) {
-            throw new AuthException(ErrorCode.TOKEN_INVALID);
-        }
+        validateRefreshToken(requestToken);
 
         RefreshToken refreshToken = refreshTokenRepository.findByToken(requestToken)
                 .orElseThrow(() -> new AuthException(ErrorCode.REFRESH_TOKEN_NOT_FOUND));
-
-        if (!refreshToken.isValid()) {
-            if (refreshToken.isExpired()) {
-                throw new AuthException(ErrorCode.TOKEN_EXPIRED);
-            }
-            if (refreshToken.isBlacklisted()) {
-                throw new AuthException(ErrorCode.TOKEN_BLACKLISTED);
-            }
-        }
 
         Long memberId = jwtProvider.getUserIdFromToken(requestToken);
         Member member = memberRepository.findById(memberId)
