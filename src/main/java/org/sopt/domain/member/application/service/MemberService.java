@@ -10,6 +10,7 @@ import org.sopt.global.response.error.ErrorCode;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +23,7 @@ public class MemberService {
 
 	private final MemberRepository memberRepository;
 	private final MemberValidator memberValidator;
+	private final PasswordEncoder passwordEncoder;
 
 	@Transactional
 	public MemberResponse create(MemberCreateRequest request) {
@@ -29,7 +31,8 @@ public class MemberService {
 			throw new MemberException(ErrorCode.DUPLICATE_EMAIL);
 		}
 
-		Member member = memberValidator.createValidatedMember(request.password(), request.name(), request.birthDate(),
+		String encodedPassword = passwordEncoder.encode(request.password());
+		Member member = memberValidator.createValidatedMember(encodedPassword, request.name(), request.birthDate(),
 			request.email(), request.gender());
 
 		try {
