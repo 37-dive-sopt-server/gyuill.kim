@@ -55,15 +55,7 @@ public class RefreshToken {
         return new RefreshToken(memberId, token, expiryDate);
     }
 
-    public boolean isExpired() {
-        return LocalDateTime.now().isAfter(this.expiryDate);
-    }
-
     public void markAsBlacklisted() {
         this.isBlacklisted = true;
-    }
-
-    public boolean isValid() {
-        return !isExpired() && !isBlacklisted;
     }
 }
