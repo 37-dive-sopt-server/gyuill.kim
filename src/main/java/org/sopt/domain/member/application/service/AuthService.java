@@ -71,5 +71,14 @@ public class AuthService {
 		return MemberResponse.fromEntity(member);
 
 	}
+
+	public MemberResponse getMemberById(Long memberId) {
+		if (memberId == null) {
+			throw new IllegalArgumentException("로그인되어 있지 않습니다.");
+		}
+		Member member = memberRepository.findById(memberId)
+			.orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
+		return MemberResponse.fromEntity(member);
+	}
 }
 

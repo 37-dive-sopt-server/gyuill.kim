@@ -25,6 +25,11 @@ spring:
   swagger:
     base-url: http://localhost:8080
 
+security:
+  jwt:
+    secret: serverz-fighting-umm-umm....-yes-yes!!!!!
+    expires-in-seconds: 3600
+
 logging:
   level:
     org.sopt: debug
