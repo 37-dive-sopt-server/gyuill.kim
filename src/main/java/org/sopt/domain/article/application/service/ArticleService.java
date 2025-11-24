@@ -25,13 +25,13 @@ public class ArticleService {
 	private final MemberRepository memberRepository;
 
 	@Transactional
-	public ArticleResponse create(ArticleCreateRequest request) {
+	public ArticleResponse create(Long authorId, ArticleCreateRequest request) {
 
 		if (articleRepository.existsByTitle(request.title())) {
 			throw new ArticleException(ErrorCode.DUPLICATE_ARTICLE_TITLE);
 		}
 
-		Member author = memberRepository.findById(request.authorId())
+		Member author = memberRepository.findById(authorId)
 			.orElseThrow(() -> new MemberException(ErrorCode.MEMBER_NOT_FOUND));
 
 		Article article = Article.create(

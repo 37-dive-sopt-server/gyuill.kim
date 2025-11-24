@@ -10,10 +10,6 @@ import jakarta.validation.constraints.NotNull;
 
 @Schema(description = "게시글 작성 요청")
 public record ArticleCreateRequest(
-	@Schema(description = "작성자 ID", example = "1", requiredMode = REQUIRED)
-	@NotNull(message = "작성자 ID를 입력해주세요")
-	Long authorId,
-
 	@Schema(description = "게시글 제목", example = "Spring Boot 시작하기", requiredMode = REQUIRED)
 	@NotBlank(message = "제목을 입력해주세요")
 	String title,

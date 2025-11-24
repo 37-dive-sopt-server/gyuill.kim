@@ -6,11 +6,13 @@ import org.sopt.domain.article.application.service.ArticleService;
 import org.sopt.global.annotation.ApiExceptions;
 import org.sopt.global.annotation.AutoApiResponse;
 import org.sopt.global.annotation.SuccessCodeAnnotation;
+import org.sopt.global.auth.security.CustomUserDetails;
 import org.sopt.global.response.error.ErrorCode;
 import org.sopt.global.response.success.SuccessCode;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,13 +38,14 @@ public class ArticleController {
 
 	@PostMapping
 	@SuccessCodeAnnotation(SuccessCode.ARTICLE_CREATED)
-	@Operation(summary = "게시글 작성", description = "새로운 게시글을 작성합니다.")
+	@Operation(summary = "게시글 작성", description = "현재 로그인한 사용자가 새로운 게시글을 작성합니다.")
 	@ApiExceptions({ErrorCode.MEMBER_NOT_FOUND, ErrorCode.INVALID_INPUT, ErrorCode.INVALID_FORMAT})
 	public ArticleResponse createArticle(
+		@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetails userDetails,
 		@Parameter(description = "게시글 작성 정보", required = true)
 		@Valid @RequestBody ArticleCreateRequest request
 	) {
-		return articleService.create(request);
+		return articleService.create(userDetails.getId(), request);
 	}
 
 	@GetMapping("/{id}")
