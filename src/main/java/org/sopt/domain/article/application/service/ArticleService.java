@@ -21,51 +21,51 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ArticleService {
 
-    private final ArticleRepository articleRepository;
-    private final MemberRepository memberRepository;
+	private final ArticleRepository articleRepository;
+	private final MemberRepository memberRepository;
 
-    @Transactional
-    public ArticleResponse create(ArticleCreateRequest request) {
+	@Transactional
+	public ArticleResponse create(ArticleCreateRequest request) {
 
-        if(articleRepository.existsByTitle(request.title())) {
-            throw new ArticleException(ErrorCode.DUPLICATE_ARTICLE_TITLE);
-        }
+		if (articleRepository.existsByTitle(request.title())) {
+			throw new ArticleException(ErrorCode.DUPLICATE_ARTICLE_TITLE);
+		}
 
-        Member author = memberRepository.findById(request.authorId())
-                .orElseThrow(() -> new MemberException(ErrorCode.MEMBER_NOT_FOUND));
+		Member author = memberRepository.findById(request.authorId())
+			.orElseThrow(() -> new MemberException(ErrorCode.MEMBER_NOT_FOUND));
 
-        Article article = Article.create(
-                author,
-                request.title(),
-                request.content(),
-                request.tag()
-        );
+		Article article = Article.create(
+			author,
+			request.title(),
+			request.content(),
+			request.tag()
+		);
 
-        articleRepository.save(article);
+		articleRepository.save(article);
 
-        return ArticleResponse.fromEntity(article);
-    }
+		return ArticleResponse.fromEntity(article);
+	}
 
-    public ArticleResponse getArticleById(Long articleId) {
-        Article article = articleRepository.findByIdWithAuthor(articleId)
-                .orElseThrow(() -> new ArticleException(ErrorCode.ARTICLE_NOT_FOUND));
-        return ArticleResponse.fromEntity(article);
-    }
+	public ArticleResponse getArticleById(Long articleId) {
+		Article article = articleRepository.findByIdWithAuthor(articleId)
+			.orElseThrow(() -> new ArticleException(ErrorCode.ARTICLE_NOT_FOUND));
+		return ArticleResponse.fromEntity(article);
+	}
 
-    public Page<ArticleResponse> findAllArticles(Pageable pageable) {
-        return articleRepository.findAllWithAuthor(pageable)
-                .map(ArticleResponse::fromEntity);
-    }
+	public Page<ArticleResponse> findAllArticles(Pageable pageable) {
+		return articleRepository.findAllWithAuthor(pageable)
+			.map(ArticleResponse::fromEntity);
+	}
 
-    public Page<ArticleResponse> searchArticles(String keyword, Pageable pageable) {
-        return articleRepository.findByTitleOrAuthorNameContaining(keyword, pageable)
-                .map(ArticleResponse::fromEntity);
-    }
+	public Page<ArticleResponse> searchArticles(String keyword, Pageable pageable) {
+		return articleRepository.findByTitleOrAuthorNameContaining(keyword, pageable)
+			.map(ArticleResponse::fromEntity);
+	}
 
-    public Page<ArticleResponse> getArticles(String keyword, Pageable pageable) {
-        if (keyword != null && !keyword.trim().isEmpty()) {
-            return searchArticles(keyword, pageable);
-        }
-        return findAllArticles(pageable);
-    }
+	public Page<ArticleResponse> getArticles(String keyword, Pageable pageable) {
+		if (keyword != null && !keyword.trim().isEmpty()) {
+			return searchArticles(keyword, pageable);
+		}
+		return findAllArticles(pageable);
+	}
 }

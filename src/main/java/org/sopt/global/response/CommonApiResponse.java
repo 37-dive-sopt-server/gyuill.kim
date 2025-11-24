@@ -1,7 +1,7 @@
 package org.sopt.global.response;
 
-import org.sopt.global.response.success.SuccessType;
 import org.sopt.global.response.error.ErrorType;
+import org.sopt.global.response.success.SuccessType;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -15,6 +15,12 @@ public class CommonApiResponse<T> {
 
 	@Schema(description = "응답 데이터", nullable = true)
 	private final T data;
+
+	private CommonApiResponse(String code, String message, T data) {
+		this.code = code;
+		this.message = message;
+		this.data = data;
+	}
 
 	public static <T> CommonApiResponse<T> success(SuccessType successCode, T data) {
 		return new CommonApiResponse<>(successCode.getCode(), successCode.getMessage(), data);
@@ -30,12 +36,6 @@ public class CommonApiResponse<T> {
 
 	public static <T> CommonApiResponse<T> fail(ErrorType errorType, T details) {
 		return new CommonApiResponse<>(errorType.getCode(), errorType.getMessage(), details);
-	}
-
-	private CommonApiResponse(String code, String message, T data) {
-		this.code = code;
-		this.message = message;
-		this.data = data;
 	}
 
 	public String getCode() {

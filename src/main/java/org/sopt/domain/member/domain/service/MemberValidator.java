@@ -11,21 +11,22 @@ import org.springframework.stereotype.Component;
 @Component
 public class MemberValidator {
 
-    public void validateBirthDate(LocalDate birthDate) {
-        if (birthDate == null) {
-            throw new MemberException(ErrorCode.BIRTH_DATE_REQUIRED);
-        }
-        if (birthDate.isAfter(LocalDate.now())) {
-            throw new MemberException(ErrorCode.BIRTH_DATE_FUTURE);
-        }
-        int age = LocalDate.now().getYear() - birthDate.getYear();
-        if (age < 20) {
-            throw new MemberException(ErrorCode.AGE_UNDER_20);
-        }
-    }
+	public void validateBirthDate(LocalDate birthDate) {
+		if (birthDate == null) {
+			throw new MemberException(ErrorCode.BIRTH_DATE_REQUIRED);
+		}
+		if (birthDate.isAfter(LocalDate.now())) {
+			throw new MemberException(ErrorCode.BIRTH_DATE_FUTURE);
+		}
+		int age = LocalDate.now().getYear() - birthDate.getYear();
+		if (age < 20) {
+			throw new MemberException(ErrorCode.AGE_UNDER_20);
+		}
+	}
 
-    public Member createValidatedMember(String password, String name, LocalDate birthDate, String email, Gender gender) {
-        validateBirthDate(birthDate);
-        return Member.create(password, name, birthDate, email, gender);
-    }
+	public Member createValidatedMember(String password, String name, LocalDate birthDate, String email,
+		Gender gender) {
+		validateBirthDate(birthDate);
+		return Member.create(password, name, birthDate, email, gender);
+	}
 }

@@ -29,13 +29,8 @@ public class MemberService {
 			throw new MemberException(ErrorCode.DUPLICATE_EMAIL);
 		}
 
-		Member member = memberValidator.createValidatedMember(
-			request.password(),
-			request.name(),
-			request.birthDate(),
-			request.email(),
-			request.gender()
-		);
+		Member member = memberValidator.createValidatedMember(request.password(), request.name(), request.birthDate(),
+			request.email(), request.gender());
 
 		try {
 			memberRepository.save(member);
@@ -53,8 +48,7 @@ public class MemberService {
 	}
 
 	public Page<MemberResponse> findAllMembers(Pageable pageable) {
-		return memberRepository.findAll(pageable)
-			.map(MemberResponse::fromEntity);
+		return memberRepository.findAll(pageable).map(MemberResponse::fromEntity);
 	}
 
 	@Transactional

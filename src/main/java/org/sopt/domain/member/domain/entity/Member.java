@@ -25,35 +25,35 @@ import lombok.NoArgsConstructor;
 })
 public class Member extends BaseTimeEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @Column(nullable = false, length = 100)
-    private String password;
+	@Column(nullable = false, length = 100)
+	private String password;
 
-    @Column(nullable = false, length = 50)
-    private String name;
+	@Column(nullable = false, length = 50)
+	private String name;
 
-    @Column(nullable = false)
-    private LocalDate birthDate;
+	@Column(nullable = false)
+	private LocalDate birthDate;
 
-    @Column(nullable = false, unique = true, length = 100)
-    private String email;
+	@Column(nullable = false, unique = true, length = 100)
+	private String email;
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private Gender gender;
+	@Column(nullable = false)
+	@Enumerated(EnumType.STRING)
+	private Gender gender;
 
-    private Member(String password, String name, LocalDate birthDate, String email, Gender gender) {
-        this.password = password;
-        this.name = name;
-        this.birthDate = birthDate;
-        this.email = email;
-        this.gender = gender;
-    }
+	private Member(String password, String name, LocalDate birthDate, String email, Gender gender) {
+		this.password = password;
+		this.name = name;
+		this.birthDate = birthDate;
+		this.email = email;
+		this.gender = gender;
+	}
 
-    public static Member create(String password, String name, LocalDate birthDate, String email, Gender gender) {
-        return new Member(password, name, birthDate, email, gender);
-    }
+	public static Member create(String password, String name, LocalDate birthDate, String email, Gender gender) {
+		return new Member(password, name, birthDate, email, gender);
+	}
 }

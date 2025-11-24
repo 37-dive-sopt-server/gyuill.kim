@@ -50,7 +50,8 @@ public class SwaggerErrorExampleGenerator {
 		return example;
 	}
 
-	private void addExamplesToResponses(ApiResponses responses, Map<Integer, List<ExampleHolder>> statusWithExampleHolders) {
+	private void addExamplesToResponses(ApiResponses responses,
+		Map<Integer, List<ExampleHolder>> statusWithExampleHolders) {
 		statusWithExampleHolders.forEach((status, exampleHolders) -> {
 			ApiResponse apiResponse = createApiResponseWithExamples(exampleHolders);
 			responses.addApiResponse(String.valueOf(status), apiResponse);

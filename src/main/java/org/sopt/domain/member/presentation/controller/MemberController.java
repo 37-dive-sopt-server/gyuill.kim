@@ -37,7 +37,8 @@ public class MemberController {
 	@PostMapping
 	@SuccessCodeAnnotation(SuccessCode.MEMBER_CREATED)
 	@Operation(summary = "회원 가입", description = "새로운 회원을 등록합니다.")
-	@ApiExceptions({ErrorCode.DUPLICATE_EMAIL, ErrorCode.INVALID_INPUT, ErrorCode.INVALID_FORMAT, ErrorCode.BIRTH_DATE_REQUIRED, ErrorCode.BIRTH_DATE_FUTURE, ErrorCode.AGE_UNDER_20})
+	@ApiExceptions({ErrorCode.DUPLICATE_EMAIL, ErrorCode.INVALID_INPUT, ErrorCode.INVALID_FORMAT,
+		ErrorCode.BIRTH_DATE_REQUIRED, ErrorCode.BIRTH_DATE_FUTURE, ErrorCode.AGE_UNDER_20})
 	public MemberResponse createMember(
 		@Parameter(description = "회원 가입 정보", required = true)
 		@Valid @RequestBody MemberCreateRequest request
