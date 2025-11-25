@@ -2,6 +2,7 @@ package org.sopt.global.auth.oauth2.service;
 
 import java.util.Map;
 
+import org.sopt.domain.member.application.dto.SocialMemberCreateRequest;
 import org.sopt.domain.member.application.service.MemberService;
 import org.sopt.domain.member.domain.entity.Member;
 import org.sopt.domain.member.domain.entity.SocialProvider;
@@ -35,14 +36,9 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 		OAuth2UserInfo userInfo = strategy.extractUserInfo(attributes);
 
 		SocialProvider provider = SocialProvider.valueOf(registrationId.toUpperCase());
+		SocialMemberCreateRequest request = SocialMemberCreateRequest.from(userInfo, provider);
 
-		Member member = memberService.getOrCreateSocialMember(
-			userInfo.getEmail(),
-			userInfo.getName(),
-			provider,
-			userInfo.getProviderId(),
-			userInfo.getProfileImageUrl()
-		);
+		Member member = memberService.getOrCreateSocialMember(request);
 
 		return new CustomUserDetails(member.getId(), member.getEmail(), member.getPassword());
 	}
