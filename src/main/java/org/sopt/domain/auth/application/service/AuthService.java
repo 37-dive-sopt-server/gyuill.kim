@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import org.sopt.domain.auth.application.dto.LoginRequest;
 import org.sopt.domain.auth.application.dto.LoginResponse;
+import org.sopt.domain.auth.application.dto.TokenPair;
 import org.sopt.domain.auth.application.dto.TokenRefreshRequest;
 import org.sopt.domain.auth.application.dto.TokenRefreshResponse;
 import org.sopt.domain.auth.domain.entity.RefreshToken;
@@ -40,23 +41,9 @@ public class AuthService {
 			throw new AuthException(ErrorCode.LOGIN_FAIL);
 		}
 
-		String accessToken = jwtProvider.generateAccessToken(member.getId());
-		String refreshToken = jwtProvider.generateRefreshToken(member.getId());
+		TokenPair tokens = generateAndSaveTokens(member.getId());
 
-		LocalDateTime expiryDate = LocalDateTime.now()
-			.plusSeconds(jwtProperties.getRefreshExpiresInSeconds());
-
-		refreshTokenRepository.findByMemberId(member.getId())
-			.ifPresent(refreshTokenRepository::delete);
-
-		RefreshToken refreshTokenEntity = RefreshToken.create(
-			member.getId(),
-			refreshToken,
-			expiryDate
-		);
-		refreshTokenRepository.save(refreshTokenEntity);
-
-		return LoginResponse.of(accessToken, refreshToken, jwtProperties.getExpiresInSeconds());
+		return LoginResponse.of(tokens.accessToken(), tokens.refreshToken(), jwtProperties.getExpiresInSeconds());
 	}
 
 	@Transactional
@@ -74,20 +61,10 @@ public class AuthService {
 
 		refreshToken.markAsBlacklisted();
 
-		String newAccessToken = jwtProvider.generateAccessToken(member.getId());
-		String newRefreshToken = jwtProvider.generateRefreshToken(member.getId());
+		TokenPair tokens = generateAndSaveTokens(member.getId());
 
-		LocalDateTime expiryDate = LocalDateTime.now()
-			.plusSeconds(jwtProperties.getRefreshExpiresInSeconds());
-
-		RefreshToken newRefreshTokenEntity = RefreshToken.create(
-			member.getId(),
-			newRefreshToken,
-			expiryDate
-		);
-		refreshTokenRepository.save(newRefreshTokenEntity);
-
-		return TokenRefreshResponse.of(newAccessToken, newRefreshToken, jwtProperties.getExpiresInSeconds());
+		return TokenRefreshResponse.of(tokens.accessToken(), tokens.refreshToken(),
+			jwtProperties.getExpiresInSeconds());
 	}
 
 	@Transactional
@@ -117,5 +94,22 @@ public class AuthService {
 		if (refreshToken.isBlacklisted()) {
 			throw new AuthException(ErrorCode.TOKEN_BLACKLISTED);
 		}
+	}
+
+	@Transactional
+	public TokenPair generateAndSaveTokens(Long userId) {
+		String accessToken = jwtProvider.generateAccessToken(userId);
+		String refreshToken = jwtProvider.generateRefreshToken(userId);
+
+		LocalDateTime expiryDate = LocalDateTime.now()
+			.plusSeconds(jwtProperties.getRefreshExpiresInSeconds());
+
+		refreshTokenRepository.findByMemberId(userId)
+			.ifPresent(refreshTokenRepository::delete);
+
+		RefreshToken refreshTokenEntity = RefreshToken.create(userId, refreshToken, expiryDate);
+		refreshTokenRepository.save(refreshTokenEntity);
+
+		return new TokenPair(accessToken, refreshToken);
 	}
 }

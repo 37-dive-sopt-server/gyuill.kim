@@ -1,7 +1,7 @@
 package org.sopt.global.auth.oauth2.service;
 
 import java.util.Map;
-import lombok.RequiredArgsConstructor;
+
 import org.sopt.domain.member.application.service.MemberService;
 import org.sopt.domain.member.domain.entity.Member;
 import org.sopt.domain.member.domain.entity.SocialProvider;
@@ -14,6 +14,8 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor

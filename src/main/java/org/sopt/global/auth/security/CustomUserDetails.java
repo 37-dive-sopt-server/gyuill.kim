@@ -23,10 +23,6 @@ public class CustomUserDetails implements UserDetails, OAuth2User {
 		return id;
 	}
 
-	public void setAttributes(Map<String, Object> attributes) {
-		this.attributes = attributes;
-	}
-
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
@@ -65,6 +61,10 @@ public class CustomUserDetails implements UserDetails, OAuth2User {
 	@Override
 	public Map<String, Object> getAttributes() {
 		return attributes;
+	}
+
+	public void setAttributes(Map<String, Object> attributes) {
+		this.attributes = attributes;
 	}
 
 	@Override

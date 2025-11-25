@@ -11,37 +11,37 @@ public class NaverUserInfo implements OAuth2UserInfo {
 
 	@Override
 	public String getProviderId() {
-		Map<String, Object> response = (Map<String, Object>) attributes.get("response");
+		Map<String, Object> response = (Map<String, Object>)attributes.get("response");
 		if (response == null) {
 			return null;
 		}
-		return (String) response.get("id");
+		return (String)response.get("id");
 	}
 
 	@Override
 	public String getEmail() {
-		Map<String, Object> response = (Map<String, Object>) attributes.get("response");
+		Map<String, Object> response = (Map<String, Object>)attributes.get("response");
 		if (response == null) {
 			return null;
 		}
-		return (String) response.get("email");
+		return (String)response.get("email");
 	}
 
 	@Override
 	public String getName() {
-		Map<String, Object> response = (Map<String, Object>) attributes.get("response");
+		Map<String, Object> response = (Map<String, Object>)attributes.get("response");
 		if (response == null) {
 			return null;
 		}
-		return (String) response.get("name");
+		return (String)response.get("name");
 	}
 
 	@Override
 	public String getProfileImageUrl() {
-		Map<String, Object> response = (Map<String, Object>) attributes.get("response");
+		Map<String, Object> response = (Map<String, Object>)attributes.get("response");
 		if (response == null) {
 			return null;
 		}
-		return (String) response.get("profile_image");
+		return (String)response.get("profile_image");
 	}
 }

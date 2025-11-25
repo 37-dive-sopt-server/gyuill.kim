@@ -1,14 +1,10 @@
 package org.sopt.global.auth.oauth2.handler;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.time.LocalDateTime;
-import lombok.RequiredArgsConstructor;
-import org.sopt.domain.auth.domain.entity.RefreshToken;
-import org.sopt.domain.auth.domain.repository.RefreshTokenRepository;
+
+import org.sopt.domain.auth.application.dto.TokenPair;
+import org.sopt.domain.auth.application.service.AuthService;
 import org.sopt.global.auth.jwt.JwtProperties;
-import org.sopt.global.auth.jwt.JwtProvider;
 import org.sopt.global.auth.security.CustomUserDetails;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -16,13 +12,16 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationSu
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+
 @Component
 @RequiredArgsConstructor
 public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
-	private final JwtProvider jwtProvider;
+	private final AuthService authService;
 	private final JwtProperties jwtProperties;
-	private final RefreshTokenRepository refreshTokenRepository;
 
 	@Value("${oauth2.success-redirect-url:http://localhost:3000/oauth2/redirect}")
 	private String redirectUrl;
@@ -31,24 +30,14 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 		Authentication authentication) throws IOException {
 
-		CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+		CustomUserDetails userDetails = (CustomUserDetails)authentication.getPrincipal();
 		Long userId = userDetails.getId();
 
-		String accessToken = jwtProvider.generateAccessToken(userId);
-		String refreshToken = jwtProvider.generateRefreshToken(userId);
-
-		LocalDateTime expiryDate = LocalDateTime.now()
-			.plusSeconds(jwtProperties.getRefreshExpiresInSeconds());
-
-		refreshTokenRepository.findByMemberId(userId)
-			.ifPresent(refreshTokenRepository::delete);
-
-		RefreshToken refreshTokenEntity = RefreshToken.create(userId, refreshToken, expiryDate);
-		refreshTokenRepository.save(refreshTokenEntity);
+		TokenPair tokens = authService.generateAndSaveTokens(userId);
 
 		String targetUrl = UriComponentsBuilder.fromUriString(redirectUrl)
-			.queryParam("accessToken", accessToken)
-			.queryParam("refreshToken", refreshToken)
+			.queryParam("accessToken", tokens.accessToken())
+			.queryParam("refreshToken", tokens.refreshToken())
 			.queryParam("expiresIn", jwtProperties.getExpiresInSeconds())
 			.build()
 			.toUriString();
