@@ -11,6 +11,8 @@ spring:
       - optional:file:.env[.properties]
   application:
     name: assignment
+  profiles:
+    include: oauth2
   datasource:
     url: ${DB_URL}
     username: ${DB_USERNAME}
