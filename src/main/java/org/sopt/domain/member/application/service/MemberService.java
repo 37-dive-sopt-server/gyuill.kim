@@ -3,6 +3,7 @@ package org.sopt.domain.member.application.service;
 import org.sopt.domain.member.application.dto.MemberCreateRequest;
 import org.sopt.domain.member.application.dto.MemberResponse;
 import org.sopt.domain.member.domain.entity.Member;
+import org.sopt.domain.member.domain.entity.SocialProvider;
 import org.sopt.domain.member.domain.repository.MemberRepository;
 import org.sopt.domain.member.domain.service.MemberValidator;
 import org.sopt.domain.member.exception.MemberException;
@@ -59,5 +60,14 @@ public class MemberService {
 		Member member = memberRepository.findById(memberId)
 			.orElseThrow(() -> new MemberException(ErrorCode.MEMBER_NOT_FOUND));
 		memberRepository.delete(member);
+	}
+
+	@Transactional
+	public Member getOrCreateSocialMember(String email, String name, SocialProvider provider, String providerId, String profileImageUrl) {
+		return memberRepository.findByProviderAndProviderId(provider, providerId)
+			.orElseGet(() -> {
+				Member newMember = Member.createSocialMember(email, name, provider, providerId, profileImageUrl);
+				return memberRepository.save(newMember);
+			});
 	}
 }
