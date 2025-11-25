@@ -6,12 +6,15 @@ server:
     include-exception: true
 
 spring:
+  config:
+    import:
+      - optional:file:.env[.properties]
   application:
     name: assignment
   datasource:
-    url: jdbc:mysql://localhost:3306/assignment
-    username: root
-    password: rb87568756
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
@@ -27,9 +30,9 @@ spring:
 
 security:
   jwt:
-    secret: serverz-fighting-umm-umm....-yes-yes!!!!!
-    expires-in-seconds: 3600
-    refresh-expires-in-seconds: 1209600
+    secret: ${JWT_SECRET}
+    expires-in-seconds: ${JWT_EXPIRES_IN_SECONDS}
+    refresh-expires-in-seconds: ${JWT_REFRESH_EXPIRES_IN_SECONDS}
 
 logging:
   level:
@@ -42,9 +45,5 @@ springdoc:
   api-docs:
     path: /api-docs
   override-with-generic-response: false
-
-member:
-  file:
-    path: data/members.csv
 
 

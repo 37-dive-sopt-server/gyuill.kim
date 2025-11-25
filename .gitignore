@@ -202,4 +202,10 @@ bin/
 
 /docs/
 /data/
+
+### Environment Variables ###
+.env
+.env.local
+.env.*.local
+
 # End of https://www.toptal.com/developers/gitignore/api/java,git,intellij,gradle
