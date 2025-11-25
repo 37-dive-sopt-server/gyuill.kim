@@ -31,7 +31,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 		Authentication authentication) throws IOException {
 
 		CustomUserDetails userDetails = (CustomUserDetails)authentication.getPrincipal();
-		Long userId = userDetails.getId();
+		Long userId = userDetails.getMemberId();
 
 		TokenPair tokens = authService.generateAndSaveTokens(userId);
 

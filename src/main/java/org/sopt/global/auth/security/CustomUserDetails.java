@@ -19,7 +19,7 @@ public class CustomUserDetails implements UserDetails, OAuth2User {
 	private final String password;
 	private Map<String, Object> attributes;
 
-	public Long getId() {
+	public Long getMemberId() {
 		return id;
 	}
 

@@ -54,7 +54,7 @@ public class MemberController {
 	public MemberResponse getMyInfo(
 		@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetails userDetails
 	) {
-		return memberService.getMemberById(userDetails.getId());
+		return memberService.getMemberById(userDetails.getMemberId());
 	}
 
 	@GetMapping
@@ -73,6 +73,6 @@ public class MemberController {
 	public void deleteMyAccount(
 		@Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetails userDetails
 	) {
-		memberService.deleteMember(userDetails.getId());
+		memberService.deleteMember(userDetails.getMemberId());
 	}
 }

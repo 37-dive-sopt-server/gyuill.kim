@@ -45,7 +45,7 @@ public class ArticleController {
 		@Parameter(description = "게시글 작성 정보", required = true)
 		@Valid @RequestBody ArticleCreateRequest request
 	) {
-		return articleService.create(userDetails.getId(), request);
+		return articleService.create(userDetails.getMemberId(), request);
 	}
 
 	@GetMapping("/{id}")
