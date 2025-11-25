@@ -1,9 +1,9 @@
 package org.sopt.domain.auth.presentation.controller;
 
-import org.sopt.domain.auth.application.dto.LoginRequest;
-import org.sopt.domain.auth.application.dto.LoginResponse;
-import org.sopt.domain.auth.application.dto.TokenRefreshRequest;
-import org.sopt.domain.auth.application.dto.TokenRefreshResponse;
+import org.sopt.domain.auth.application.dto.request.LoginRequest;
+import org.sopt.domain.auth.application.dto.response.LoginResponse;
+import org.sopt.domain.auth.application.dto.request.TokenRefreshRequest;
+import org.sopt.domain.auth.application.dto.response.TokenRefreshResponse;
 import org.sopt.domain.auth.application.service.AuthService;
 import org.sopt.global.annotation.ApiExceptions;
 import org.sopt.global.annotation.SuccessCodeAnnotation;

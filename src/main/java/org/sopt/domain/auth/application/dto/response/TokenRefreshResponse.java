@@ -1,4 +1,4 @@
-package org.sopt.domain.auth.application.dto;
+package org.sopt.domain.auth.application.dto.response;
 
 public record TokenRefreshResponse(
 	String accessToken,

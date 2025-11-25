@@ -1,4 +1,4 @@
-package org.sopt.domain.auth.application.dto;
+package org.sopt.domain.auth.application.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 

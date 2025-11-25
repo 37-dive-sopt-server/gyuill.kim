@@ -2,11 +2,11 @@ package org.sopt.domain.auth.application.service;
 
 import java.time.LocalDateTime;
 
-import org.sopt.domain.auth.application.dto.LoginRequest;
-import org.sopt.domain.auth.application.dto.LoginResponse;
+import org.sopt.domain.auth.application.dto.request.LoginRequest;
+import org.sopt.domain.auth.application.dto.response.LoginResponse;
 import org.sopt.domain.auth.application.dto.TokenPair;
-import org.sopt.domain.auth.application.dto.TokenRefreshRequest;
-import org.sopt.domain.auth.application.dto.TokenRefreshResponse;
+import org.sopt.domain.auth.application.dto.request.TokenRefreshRequest;
+import org.sopt.domain.auth.application.dto.response.TokenRefreshResponse;
 import org.sopt.domain.auth.domain.entity.RefreshToken;
 import org.sopt.domain.auth.domain.repository.RefreshTokenRepository;
 import org.sopt.domain.auth.exception.AuthException;
