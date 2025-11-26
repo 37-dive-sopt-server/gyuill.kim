@@ -77,7 +77,7 @@ public class AuthService {
 		token.markAsBlacklisted();
 	}
 
-	public void validateRefreshToken(String token) {
+	private void validateRefreshToken(String token) {
 		// 1. JWT 만료 여부 체크
 		if (jwtProvider.isTokenExpired(token)) {
 			throw new AuthException(ErrorCode.TOKEN_EXPIRED);

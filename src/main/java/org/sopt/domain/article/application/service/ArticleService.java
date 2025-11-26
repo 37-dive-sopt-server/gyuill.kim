@@ -52,12 +52,12 @@ public class ArticleService {
 		return ArticleResponse.fromEntity(article);
 	}
 
-	public Page<ArticleResponse> findAllArticles(Pageable pageable) {
+	private Page<ArticleResponse> findAllArticles(Pageable pageable) {
 		return articleRepository.findAllWithAuthor(pageable)
 			.map(ArticleResponse::fromEntity);
 	}
 
-	public Page<ArticleResponse> searchArticles(String keyword, Pageable pageable) {
+	private Page<ArticleResponse> searchArticles(String keyword, Pageable pageable) {
 		return articleRepository.findByTitleOrAuthorNameContaining(keyword, pageable)
 			.map(ArticleResponse::fromEntity);
 	}
