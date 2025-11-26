@@ -24,9 +24,9 @@ spring:
       ddl-auto: update
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.MySQL8Dialect
         format_sql: true
     show-sql: true
+    open-in-view: false
   swagger:
     base-url: http://localhost:8080
 
@@ -47,5 +47,4 @@ springdoc:
   api-docs:
     path: /api-docs
   override-with-generic-response: false
-
 
