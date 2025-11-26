@@ -23,7 +23,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 	private final AuthService authService;
 	private final OAuth2TempCodeService tempCodeService;
 
-	@Value("${oauth2.success-redirect-url:http://localhost:3000/oauth2/redirect}")
+	@Value("${oauth2.success-redirect-url:http://localhost:8080/oauth2/redirect}")
 	private String redirectUrl;
 
 	@Override

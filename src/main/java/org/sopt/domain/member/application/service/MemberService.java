@@ -66,6 +66,11 @@ public class MemberService {
 	public Member getOrCreateSocialMember(SocialMemberCreateRequest request) {
 		return memberRepository.findByProviderAndProviderId(request.provider(), request.providerId())
 			.orElseGet(() -> {
+				// 같은 이메일이 이미 존재하면 중복 에러
+				if (memberRepository.existsByEmail(request.email())) {
+					throw new MemberException(ErrorCode.DUPLICATE_EMAIL);
+				}
+
 				Member newMember = Member.createSocialMember(
 					request.email(),
 					request.name(),

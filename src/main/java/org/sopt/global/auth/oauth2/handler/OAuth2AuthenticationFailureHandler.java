@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 public class OAuth2AuthenticationFailureHandler extends SimpleUrlAuthenticationFailureHandler {
 
-	@Value("${oauth2.failure-redirect-url:http://localhost:3000/login?error=true}")
+	@Value("${oauth2.failure-redirect-url:http://localhost:8080/login?error=true}")
 	private String redirectUrl;
 
 	@Override
