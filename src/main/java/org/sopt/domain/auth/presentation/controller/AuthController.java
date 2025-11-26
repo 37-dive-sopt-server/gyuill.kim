@@ -10,9 +10,11 @@ import org.sopt.global.annotation.SuccessCodeAnnotation;
 import org.sopt.global.response.CommonApiResponse;
 import org.sopt.global.response.error.ErrorCode;
 import org.sopt.global.response.success.SuccessCode;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -65,5 +67,16 @@ public class AuthController {
 	public CommonApiResponse<Void> logout(@Valid @RequestBody TokenRefreshRequest request) {
 		authService.logout(request.refreshToken());
 		return CommonApiResponse.success(SuccessCode.LOGOUT_SUCCESS);
+	}
+
+	@Operation(summary = "OAuth2 토큰 교환", description = "OAuth2 임시 코드를 JWT 토큰으로 교환합니다.")
+	@ApiExceptions({
+		ErrorCode.TOKEN_INVALID
+	})
+	@SuccessCodeAnnotation(SuccessCode.OAUTH2_LOGIN_SUCCESS)
+	@GetMapping("/oauth2/token")
+	public CommonApiResponse<LoginResponse> exchangeOAuth2Token(@RequestParam String code) {
+		LoginResponse response = authService.exchangeOAuth2Code(code);
+		return CommonApiResponse.success(SuccessCode.OAUTH2_LOGIN_SUCCESS, response);
 	}
 }

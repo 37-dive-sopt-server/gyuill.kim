@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import org.sopt.domain.auth.application.dto.TokenPair;
 import org.sopt.domain.auth.application.service.AuthService;
-import org.sopt.global.auth.jwt.JwtProperties;
+import org.sopt.global.auth.oauth2.service.OAuth2TempCodeService;
 import org.sopt.global.auth.security.CustomUserDetails;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -21,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
 	private final AuthService authService;
-	private final JwtProperties jwtProperties;
+	private final OAuth2TempCodeService tempCodeService;
 
 	@Value("${oauth2.success-redirect-url:http://localhost:3000/oauth2/redirect}")
 	private String redirectUrl;
@@ -34,11 +34,10 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 		Long userId = userDetails.getMemberId();
 
 		TokenPair tokens = authService.generateAndSaveTokens(userId);
+		String code = tempCodeService.generateCode(tokens);
 
 		String targetUrl = UriComponentsBuilder.fromUriString(redirectUrl)
-			.queryParam("accessToken", tokens.accessToken())
-			.queryParam("refreshToken", tokens.refreshToken())
-			.queryParam("expiresIn", jwtProperties.getExpiresInSeconds())
+			.queryParam("code", code)
 			.build()
 			.toUriString();
 

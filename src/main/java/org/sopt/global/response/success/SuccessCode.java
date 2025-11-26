@@ -13,7 +13,8 @@ public enum SuccessCode implements SuccessType {
 
 	LOGIN_SUCCESS("AU201", "로그인 성공"),
 	TOKEN_REFRESH_SUCCESS("AU202", "토큰 갱신 성공"),
-	LOGOUT_SUCCESS("AU203", "로그아웃 성공");
+	LOGOUT_SUCCESS("AU203", "로그아웃 성공"),
+	OAUTH2_LOGIN_SUCCESS("AU204", "소셜 로그인 성공");
 
 	private final String code;
 	private final String message;

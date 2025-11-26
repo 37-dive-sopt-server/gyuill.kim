@@ -2,10 +2,10 @@ package org.sopt.domain.auth.application.service;
 
 import java.time.LocalDateTime;
 
-import org.sopt.domain.auth.application.dto.request.LoginRequest;
-import org.sopt.domain.auth.application.dto.response.LoginResponse;
 import org.sopt.domain.auth.application.dto.TokenPair;
+import org.sopt.domain.auth.application.dto.request.LoginRequest;
 import org.sopt.domain.auth.application.dto.request.TokenRefreshRequest;
+import org.sopt.domain.auth.application.dto.response.LoginResponse;
 import org.sopt.domain.auth.application.dto.response.TokenRefreshResponse;
 import org.sopt.domain.auth.domain.entity.RefreshToken;
 import org.sopt.domain.auth.domain.repository.RefreshTokenRepository;
@@ -14,6 +14,7 @@ import org.sopt.domain.member.domain.entity.Member;
 import org.sopt.domain.member.domain.repository.MemberRepository;
 import org.sopt.global.auth.jwt.JwtProperties;
 import org.sopt.global.auth.jwt.JwtProvider;
+import org.sopt.global.auth.oauth2.service.OAuth2TempCodeService;
 import org.sopt.global.response.error.ErrorCode;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,7 @@ public class AuthService {
 	private final JwtProvider jwtProvider;
 	private final JwtProperties jwtProperties;
 	private final PasswordEncoder passwordEncoder;
+	private final OAuth2TempCodeService tempCodeService;
 
 	@Transactional
 	public LoginResponse login(LoginRequest request) {
@@ -111,5 +113,15 @@ public class AuthService {
 		refreshTokenRepository.save(refreshTokenEntity);
 
 		return new TokenPair(accessToken, refreshToken);
+	}
+
+	public LoginResponse exchangeOAuth2Code(String code) {
+		TokenPair tokens = tempCodeService.consumeCode(code);
+
+		if (tokens == null) {
+			throw new AuthException(ErrorCode.TOKEN_INVALID);
+		}
+
+		return LoginResponse.of(tokens.accessToken(), tokens.refreshToken(), jwtProperties.getExpiresInSeconds());
 	}
 }
