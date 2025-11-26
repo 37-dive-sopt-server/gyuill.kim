@@ -5,6 +5,7 @@ import org.sopt.domain.auth.application.dto.response.LoginResponse;
 import org.sopt.domain.auth.application.dto.request.TokenRefreshRequest;
 import org.sopt.domain.auth.application.dto.response.TokenRefreshResponse;
 import org.sopt.domain.auth.application.service.AuthService;
+import org.sopt.domain.auth.application.service.OAuth2AuthService;
 import org.sopt.global.annotation.ApiExceptions;
 import org.sopt.global.annotation.SuccessCodeAnnotation;
 import org.sopt.global.response.CommonApiResponse;
@@ -29,6 +30,7 @@ import lombok.RequiredArgsConstructor;
 public class AuthController {
 
 	private final AuthService authService;
+	private final OAuth2AuthService oauth2AuthService;
 
 	@Operation(summary = "로그인", description = "이메일과 비밀번호로 로그인하여 Access Token과 Refresh Token을 발급받습니다.")
 	@ApiExceptions({
@@ -76,7 +78,7 @@ public class AuthController {
 	@SuccessCodeAnnotation(SuccessCode.OAUTH2_LOGIN_SUCCESS)
 	@GetMapping("/oauth2/token")
 	public CommonApiResponse<LoginResponse> exchangeOAuth2Token(@RequestParam String code) {
-		LoginResponse response = authService.exchangeOAuth2Code(code);
+		LoginResponse response = oauth2AuthService.exchangeOAuth2Code(code);
 		return CommonApiResponse.success(SuccessCode.OAUTH2_LOGIN_SUCCESS, response);
 	}
 }
