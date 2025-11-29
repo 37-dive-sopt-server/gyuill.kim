@@ -16,10 +16,10 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
 	Optional<Article> findByIdWithAuthor(@Param("id") Long id);
 
 	@Query(value = "SELECT a FROM Article a JOIN FETCH a.author",
-		   countQuery = "SELECT COUNT(a) FROM Article a")
+		countQuery = "SELECT COUNT(a) FROM Article a")
 	Page<Article> findAllWithAuthor(Pageable pageable);
 
 	@Query(value = "SELECT a FROM Article a JOIN FETCH a.author WHERE a.title LIKE %:keyword% OR a.author.name LIKE %:keyword%",
-		   countQuery = "SELECT COUNT(a) FROM Article a WHERE a.title LIKE %:keyword% OR a.author.name LIKE %:keyword%")
+		countQuery = "SELECT COUNT(a) FROM Article a WHERE a.title LIKE %:keyword% OR a.author.name LIKE %:keyword%")
 	Page<Article> findByTitleOrAuthorNameContaining(@Param("keyword") String keyword, Pageable pageable);
 }

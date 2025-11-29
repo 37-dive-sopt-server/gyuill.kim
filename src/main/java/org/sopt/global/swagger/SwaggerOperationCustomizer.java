@@ -29,7 +29,8 @@ public class SwaggerOperationCustomizer implements OperationCustomizer {
 
 	private ApiExceptions resolveApiExceptions(HandlerMethod handlerMethod) {
 		ApiExceptions ann = handlerMethod.getMethodAnnotation(ApiExceptions.class);
-		if (ann != null) return ann;
+		if (ann != null)
+			return ann;
 
 		Method method = handlerMethod.getMethod();
 		Class<?> beanType = handlerMethod.getBeanType();
@@ -37,7 +38,8 @@ public class SwaggerOperationCustomizer implements OperationCustomizer {
 			try {
 				Method interfaceMethod = i.getMethod(method.getName(), method.getParameterTypes());
 				ApiExceptions fromInterface = interfaceMethod.getAnnotation(ApiExceptions.class);
-				if (fromInterface != null) return fromInterface;
+				if (fromInterface != null)
+					return fromInterface;
 			} catch (NoSuchMethodException ignored) {
 			}
 		}

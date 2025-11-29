@@ -8,8 +8,13 @@ public enum SuccessCode implements SuccessType {
 	MEMBER_DELETED("M203", "회원 삭제 성공"),
 	MEMBER_VIEW("M204", "회원 정보 조회 성공"),
 
-	ARTICLE_CREATED("A201", "게시글 작성 성공"),
-	ARTICLE_VIEW("A202", "게시글 조회 성공");
+	ARTICLE_CREATED("AR201", "게시글 작성 성공"),
+	ARTICLE_VIEW("AR202", "게시글 조회 성공"),
+
+	LOGIN_SUCCESS("AU201", "로그인 성공"),
+	TOKEN_REFRESH_SUCCESS("AU202", "토큰 갱신 성공"),
+	LOGOUT_SUCCESS("AU203", "로그아웃 성공"),
+	OAUTH2_LOGIN_SUCCESS("AU204", "소셜 로그인 성공");
 
 	private final String code;
 	private final String message;

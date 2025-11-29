@@ -1,0 +1,35 @@
+package org.sopt.global.auth.oauth2.handler;
+
+import java.io.IOException;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
+import org.springframework.stereotype.Component;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@Component
+public class OAuth2AuthenticationFailureHandler extends SimpleUrlAuthenticationFailureHandler {
+
+	@Value("${oauth2.failure-redirect-url:http://localhost:8080/login?error=true}")
+	private String redirectUrl;
+
+	@Override
+	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
+		AuthenticationException exception) throws IOException {
+
+		log.error("OAuth2 authentication failed", exception);
+
+		String targetUrl = UriComponentsBuilder.fromUriString(redirectUrl)
+			.queryParam("error", exception.getMessage())
+			.build()
+			.toUriString();
+
+		getRedirectStrategy().sendRedirect(request, response, targetUrl);
+	}
+}
