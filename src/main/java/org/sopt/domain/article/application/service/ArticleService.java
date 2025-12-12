@@ -27,6 +27,7 @@ public class ArticleService {
 
 	private final ArticleRepository articleRepository;
 	private final MemberRepository memberRepository;
+	private final CommentRepository commentRepository;
 
 	@Transactional
 	public ArticleResponse create(Long authorId, ArticleCreateRequest request) {
@@ -53,7 +54,11 @@ public class ArticleService {
 	public ArticleResponse getArticleById(Long articleId) {
 		Article article = articleRepository.findByIdWithAuthor(articleId)
 			.orElseThrow(() -> new ArticleException(ErrorCode.ARTICLE_NOT_FOUND));
-		return ArticleResponse.fromEntity(article);
+
+		// 댓글 목록 조회 (JOIN FETCH로 작성자 정보 포함)
+		List<Comment> comments = commentRepository.findByArticleIdWithAuthor(articleId);
+
+		return ArticleResponse.fromEntityWithComments(article, comments);
 	}
 
 	private Page<ArticleResponse> findAllArticles(Pageable pageable) {
