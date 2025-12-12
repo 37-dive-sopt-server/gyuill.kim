@@ -6,6 +6,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.stats.CacheStats;
 
 import lombok.RequiredArgsConstructor;
@@ -24,7 +25,7 @@ public class CacheMonitor {
 		cacheManager.getCacheNames().forEach(cacheName -> {
 			CaffeineCache caffeineCache = (CaffeineCache)cacheManager.getCache(cacheName);
 			if (caffeineCache != null) {
-				com.github.benmanes.caffeine.cache.Cache<Object, Object> nativeCache =
+				Cache<Object, Object> nativeCache =
 					caffeineCache.getNativeCache();
 
 				CacheStats stats = nativeCache.stats();
