@@ -1,10 +1,14 @@
 package org.sopt.domain.article.application.service;
 
+import java.util.List;
+
 import org.sopt.domain.article.application.dto.ArticleCreateRequest;
 import org.sopt.domain.article.application.dto.ArticleResponse;
 import org.sopt.domain.article.domain.entity.Article;
 import org.sopt.domain.article.domain.repository.ArticleRepository;
 import org.sopt.domain.article.exception.ArticleException;
+import org.sopt.domain.comment.domain.entity.Comment;
+import org.sopt.domain.comment.domain.repository.CommentRepository;
 import org.sopt.domain.member.domain.entity.Member;
 import org.sopt.domain.member.domain.repository.MemberRepository;
 import org.sopt.domain.member.exception.MemberException;

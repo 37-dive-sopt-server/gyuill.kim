@@ -1,9 +1,13 @@
 package org.sopt.domain.article.application.dto;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
 
 import org.sopt.domain.article.domain.entity.Article;
 import org.sopt.domain.article.domain.entity.Tag;
+import org.sopt.domain.comment.application.dto.CommentSimpleResponse;
+import org.sopt.domain.comment.domain.entity.Comment;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -31,7 +35,10 @@ public record ArticleResponse(
 	LocalDateTime createdAt,
 
 	@Schema(description = "수정일시", example = "2024-01-01T10:00:00")
-	LocalDateTime updatedAt
+	LocalDateTime updatedAt,
+
+	@Schema(description = "댓글 목록")
+	List<CommentSimpleResponse> comments
 ) {
 	public static ArticleResponse fromEntity(Article article) {
 		return new ArticleResponse(
@@ -42,7 +49,24 @@ public record ArticleResponse(
 			article.getContent(),
 			article.getTag(),
 			article.getCreatedAt(),
-			article.getUpdatedAt()
+			article.getUpdatedAt(),
+			Collections.emptyList()
+		);
+	}
+
+	public static ArticleResponse fromEntityWithComments(Article article, List<Comment> comments) {
+		return new ArticleResponse(
+			article.getId(),
+			article.getAuthor().getId(),
+			article.getAuthor().getName(),
+			article.getTitle(),
+			article.getContent(),
+			article.getTag(),
+			article.getCreatedAt(),
+			article.getUpdatedAt(),
+			comments.stream()
+				.map(CommentSimpleResponse::fromEntity)
+				.toList()
 		);
 	}
 }

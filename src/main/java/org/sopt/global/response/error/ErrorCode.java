@@ -25,7 +25,13 @@ public enum ErrorCode implements ErrorType {
 
 	// 게시글 관련 에러
 	ARTICLE_NOT_FOUND("A401", "게시글을 찾을 수 없습니다", 404),
-	DUPLICATE_ARTICLE_TITLE("A403", "이미 존재하는 게시글 제목입니다", 400);
+	DUPLICATE_ARTICLE_TITLE("A403", "이미 존재하는 게시글 제목입니다", 400),
+
+	// 댓글 관련 에러
+	COMMENT_NOT_FOUND("C401", "댓글을 찾을 수 없습니다", 404),
+	COMMENT_CONTENT_REQUIRED("C402", "댓글 내용을 입력해주세요", 400),
+	COMMENT_CONTENT_TOO_LONG("C403", "댓글은 300자 이내로 입력해주세요", 400),
+	COMMENT_UNAUTHORIZED("C404", "댓글 작성자만 수정/삭제할 수 있습니다", 403);
 
 	private final String code;
 	private final String message;
