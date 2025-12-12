@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.sopt.domain.article.domain.entity.Article;
 import org.sopt.domain.article.domain.entity.Tag;
-import org.sopt.domain.comment.application.dto.CommentSimpleResponse;
+import org.sopt.domain.comment.application.dto.response.CommentSimpleResponse;
 import org.sopt.domain.comment.domain.entity.Comment;
 
 import io.swagger.v3.oas.annotations.media.Schema;

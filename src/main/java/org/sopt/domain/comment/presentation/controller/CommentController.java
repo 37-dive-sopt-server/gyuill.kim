@@ -1,8 +1,8 @@
 package org.sopt.domain.comment.presentation.controller;
 
-import org.sopt.domain.comment.application.dto.CommentCreateRequest;
-import org.sopt.domain.comment.application.dto.CommentResponse;
-import org.sopt.domain.comment.application.dto.CommentUpdateRequest;
+import org.sopt.domain.comment.application.dto.request.CommentCreateRequest;
+import org.sopt.domain.comment.application.dto.response.CommentResponse;
+import org.sopt.domain.comment.application.dto.request.CommentUpdateRequest;
 import org.sopt.domain.comment.application.service.CommentService;
 import org.sopt.global.annotation.AutoApiResponse;
 import org.sopt.global.annotation.SuccessCodeAnnotation;

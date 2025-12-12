@@ -1,4 +1,4 @@
-package org.sopt.domain.comment.application.dto;
+package org.sopt.domain.comment.application.dto.request;
 
 import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.*;
 
