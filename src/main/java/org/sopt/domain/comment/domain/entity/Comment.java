@@ -58,4 +58,12 @@ public class Comment extends BaseTimeEntity {
 	public boolean isAuthor(Long memberId) {
 		return this.author.getId().equals(memberId);
 	}
+
+	public void validateAuthor(Long requesterId) {
+		if (!isAuthor(requesterId)) {
+			throw new org.sopt.domain.comment.exception.CommentException(
+				org.sopt.global.response.error.ErrorCode.COMMENT_UNAUTHORIZED
+			);
+		}
+	}
 }

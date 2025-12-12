@@ -8,7 +8,6 @@ import org.sopt.domain.comment.application.dto.response.CommentResponse;
 import org.sopt.domain.comment.application.dto.request.CommentUpdateRequest;
 import org.sopt.domain.comment.domain.entity.Comment;
 import org.sopt.domain.comment.domain.repository.CommentRepository;
-import org.sopt.domain.comment.domain.service.CommentValidator;
 import org.sopt.domain.comment.exception.CommentException;
 import org.sopt.domain.member.domain.entity.Member;
 import org.sopt.domain.member.domain.repository.MemberRepository;
@@ -29,7 +28,6 @@ public class CommentService {
 	private final CommentRepository commentRepository;
 	private final ArticleRepository articleRepository;
 	private final MemberRepository memberRepository;
-	private final CommentValidator commentValidator;
 
 	@Transactional
 	public CommentResponse create(Long authorId, CommentCreateRequest request) {
@@ -38,8 +36,6 @@ public class CommentService {
 
 		Member author = memberRepository.findById(authorId)
 			.orElseThrow(() -> new MemberException(ErrorCode.MEMBER_NOT_FOUND));
-
-		commentValidator.validateContent(request.content());
 
 		Comment comment = Comment.create(article, author, request.content());
 		commentRepository.save(comment);
@@ -63,8 +59,7 @@ public class CommentService {
 		Comment comment = commentRepository.findByIdWithDetails(commentId)
 			.orElseThrow(() -> new CommentException(ErrorCode.COMMENT_NOT_FOUND));
 
-		commentValidator.validateAuthorization(comment, requesterId);
-		commentValidator.validateContent(request.content());
+		comment.validateAuthor(requesterId);
 
 		comment.updateContent(request.content());
 
@@ -76,7 +71,7 @@ public class CommentService {
 		Comment comment = commentRepository.findByIdWithAuthor(commentId)
 			.orElseThrow(() -> new CommentException(ErrorCode.COMMENT_NOT_FOUND));
 
-		commentValidator.validateAuthorization(comment, requesterId);
+		comment.validateAuthor(requesterId);
 
 		commentRepository.delete(comment);
 	}
