@@ -13,6 +13,7 @@ import org.sopt.domain.member.domain.entity.Member;
 import org.sopt.domain.member.domain.repository.MemberRepository;
 import org.sopt.domain.member.exception.MemberException;
 import org.sopt.global.response.error.ErrorCode;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -30,6 +31,7 @@ public class CommentService {
 	private final MemberRepository memberRepository;
 
 	@Transactional
+	@CacheEvict(value = "articles", key = "#request.articleId")
 	public CommentResponse create(Long authorId, CommentCreateRequest request) {
 		Article article = articleRepository.findById(request.articleId())
 			.orElseThrow(() -> new ArticleException(ErrorCode.ARTICLE_NOT_FOUND));
@@ -55,6 +57,7 @@ public class CommentService {
 	}
 
 	@Transactional
+	@CacheEvict(value = "articles", key = "#result.articleId")
 	public CommentResponse update(Long commentId, Long requesterId, CommentUpdateRequest request) {
 		Comment comment = commentRepository.findByIdWithDetails(commentId)
 			.orElseThrow(() -> new CommentException(ErrorCode.COMMENT_NOT_FOUND));
@@ -73,6 +76,15 @@ public class CommentService {
 
 		comment.validateAuthor(requesterId);
 
+		Long articleId = comment.getArticle().getId();
 		commentRepository.delete(comment);
+
+		// 캐시 수동 무효화 (void 메서드라 @CacheEvict 사용 불가)
+		evictArticleCache(articleId);
+	}
+
+	@CacheEvict(value = "articles", key = "#articleId")
+	public void evictArticleCache(Long articleId) {
+		// 캐시 무효화만 수행
 	}
 }

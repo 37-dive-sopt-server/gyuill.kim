@@ -13,6 +13,7 @@ import org.sopt.domain.member.domain.entity.Member;
 import org.sopt.domain.member.domain.repository.MemberRepository;
 import org.sopt.domain.member.exception.MemberException;
 import org.sopt.global.response.error.ErrorCode;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -51,6 +52,7 @@ public class ArticleService {
 		return ArticleResponse.fromEntity(article);
 	}
 
+	@Cacheable(value = "articles", key = "#articleId")
 	public ArticleResponse getArticleById(Long articleId) {
 		Article article = articleRepository.findByIdWithAuthor(articleId)
 			.orElseThrow(() -> new ArticleException(ErrorCode.ARTICLE_NOT_FOUND));
