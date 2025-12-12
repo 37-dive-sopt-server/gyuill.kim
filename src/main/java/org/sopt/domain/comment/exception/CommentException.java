@@ -1,6 +1,6 @@
 package org.sopt.domain.comment.exception;
 
-import org.sopt.global.exception.base.BaseException;
+import org.sopt.global.exception.BaseException;
 import org.sopt.global.response.error.ErrorCode;
 
 public class CommentException extends BaseException {
