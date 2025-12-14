@@ -28,7 +28,7 @@ class MemberRepositoryTest {
 	void findByEmail_Success() {
 		// given
 		Member member = MemberFixture.createLocalMember("test@example.com", "Test User");
-		entityManager.persistAndFlush(member);
+		memberRepository.save(member);
 		entityManager.clear();
 
 		// when
@@ -55,7 +55,7 @@ class MemberRepositoryTest {
 	void existsByEmail_True() {
 		// given
 		Member member = MemberFixture.createLocalMember("exists@example.com", "Existing User");
-		entityManager.persistAndFlush(member);
+		memberRepository.save(member);
 		entityManager.clear();
 
 		// when
@@ -81,7 +81,7 @@ class MemberRepositoryTest {
 		// given
 		Member socialMember = MemberFixture.createSocialMember("social@example.com", "Social User",
 			SocialProvider.GOOGLE);
-		entityManager.persistAndFlush(socialMember);
+		memberRepository.save(socialMember);
 		entityManager.clear();
 
 		// when
@@ -144,13 +144,12 @@ class MemberRepositoryTest {
 	void delete_Success() {
 		// given
 		Member member = MemberFixture.createLocalMember("delete@example.com", "Delete User");
-		Member saved = entityManager.persistAndFlush(member);
+		Member saved = memberRepository.save(member);
 		Long memberId = saved.getId();
 		entityManager.clear();
 
 		// when
 		memberRepository.deleteById(memberId);
-		entityManager.flush();
 
 		// then
 		Optional<Member> result = memberRepository.findById(memberId);

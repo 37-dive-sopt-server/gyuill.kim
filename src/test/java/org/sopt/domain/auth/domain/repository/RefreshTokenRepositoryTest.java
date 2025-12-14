@@ -31,7 +31,7 @@ class RefreshTokenRepositoryTest {
 			"test-refresh-token",
 			LocalDateTime.now().plusDays(1)
 		);
-		entityManager.persistAndFlush(refreshToken);
+		refreshTokenRepository.save(refreshToken);
 		entityManager.clear();
 
 		// when
@@ -62,7 +62,7 @@ class RefreshTokenRepositoryTest {
 			"member-100-token",
 			LocalDateTime.now().plusDays(1)
 		);
-		entityManager.persistAndFlush(refreshToken);
+		refreshTokenRepository.save(refreshToken);
 		entityManager.clear();
 
 		// when
@@ -98,11 +98,10 @@ class RefreshTokenRepositoryTest {
 		RefreshToken validToken1 = RefreshToken.create(3L, "valid-token-1", now.plusDays(1));
 		RefreshToken validToken2 = RefreshToken.create(4L, "valid-token-2", now.plusDays(7));
 
-		entityManager.persist(expiredToken1);
-		entityManager.persist(expiredToken2);
-		entityManager.persist(validToken1);
-		entityManager.persist(validToken2);
-		entityManager.flush();
+		refreshTokenRepository.save(expiredToken1);
+		refreshTokenRepository.save(expiredToken2);
+		refreshTokenRepository.save(validToken1);
+		refreshTokenRepository.save(validToken2);
 
 		Long expiredId1 = expiredToken1.getId();
 		Long expiredId2 = expiredToken2.getId();
@@ -113,7 +112,6 @@ class RefreshTokenRepositoryTest {
 
 		// when - 현재 시간 이전에 만료된 토큰 삭제
 		refreshTokenRepository.deleteByExpiryDateBefore(now);
-		entityManager.flush();
 
 		// then
 		assertThat(refreshTokenRepository.findById(expiredId1)).isEmpty();
@@ -153,7 +151,7 @@ class RefreshTokenRepositoryTest {
 		);
 
 		// when
-		RefreshToken saved = entityManager.persistAndFlush(refreshToken);
+		RefreshToken saved = refreshTokenRepository.save(refreshToken);
 
 		// then
 		assertThat(saved.getCreatedAt()).isNotNull();
@@ -169,13 +167,13 @@ class RefreshTokenRepositoryTest {
 			"blacklist-token",
 			LocalDateTime.now().plusDays(1)
 		);
-		RefreshToken saved = entityManager.persistAndFlush(refreshToken);
+		RefreshToken saved = refreshTokenRepository.save(refreshToken);
 		entityManager.clear();
 
 		// when
 		RefreshToken found = refreshTokenRepository.findById(saved.getId()).get();
 		found.markAsBlacklisted();
-		entityManager.flush();
+		entityManager.flush(); // dirty checking으로 변경사항 DB 반영
 		entityManager.clear();
 
 		// then
@@ -210,13 +208,12 @@ class RefreshTokenRepositoryTest {
 			"delete-token",
 			LocalDateTime.now().plusDays(1)
 		);
-		RefreshToken saved = entityManager.persistAndFlush(refreshToken);
+		RefreshToken saved = refreshTokenRepository.save(refreshToken);
 		Long tokenId = saved.getId();
 		entityManager.clear();
 
 		// when
 		refreshTokenRepository.deleteById(tokenId);
-		entityManager.flush();
 
 		// then
 		Optional<RefreshToken> result = refreshTokenRepository.findById(tokenId);
@@ -232,7 +229,7 @@ class RefreshTokenRepositoryTest {
 			"old-token",
 			LocalDateTime.now().plusDays(1)
 		);
-		entityManager.persistAndFlush(oldToken);
+		refreshTokenRepository.save(oldToken);
 		Long oldTokenId = oldToken.getId();
 		entityManager.clear();
 
@@ -241,7 +238,6 @@ class RefreshTokenRepositoryTest {
 		assertThat(found).isPresent();
 
 		refreshTokenRepository.delete(found.get());
-		entityManager.flush();
 
 		// 새 토큰 저장
 		RefreshToken newToken = RefreshToken.create(
@@ -250,7 +246,7 @@ class RefreshTokenRepositoryTest {
 			LocalDateTime.now().plusDays(7)
 		);
 		refreshTokenRepository.save(newToken);
-		entityManager.flush();
+		entityManager.flush(); // 모든 변경사항 DB 반영
 		entityManager.clear();
 
 		// then - 기존 토큰은 삭제되고 새 토큰만 존재
