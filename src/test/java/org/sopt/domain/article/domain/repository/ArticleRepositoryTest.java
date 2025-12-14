@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.sopt.annotation.RepositoryTest;
 import org.sopt.domain.article.domain.entity.Article;
 import org.sopt.domain.article.domain.entity.Tag;
 import org.sopt.domain.member.domain.entity.Member;
@@ -14,18 +15,13 @@ import org.sopt.domain.member.domain.repository.MemberRepository;
 import org.sopt.fixture.ArticleFixture;
 import org.sopt.fixture.MemberFixture;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.test.context.ActiveProfiles;
 
-@DataJpaTest
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@ActiveProfiles("test")
+@RepositoryTest
 class ArticleRepositoryTest {
 
 	@Autowired
@@ -42,7 +38,7 @@ class ArticleRepositoryTest {
 	@BeforeEach
 	void setUp() {
 		author = MemberFixture.createLocalMember("author@example.com", "Author");
-		author = entityManager.persistAndFlush(author);
+		author = memberRepository.save(author);
 	}
 
 	@Test
@@ -50,7 +46,7 @@ class ArticleRepositoryTest {
 	void existsByTitle_True() {
 		// given
 		Article article = ArticleFixture.createArticle(author, "Unique Title");
-		entityManager.persistAndFlush(article);
+		articleRepository.save(article);
 		entityManager.clear();
 
 		// when
@@ -75,7 +71,7 @@ class ArticleRepositoryTest {
 	void findByIdWithAuthor_Success() {
 		// given
 		Article article = ArticleFixture.createArticle(author, "Test Article");
-		Article saved = entityManager.persistAndFlush(article);
+		Article saved = articleRepository.save(article);
 		entityManager.clear(); // 영속성 컨텍스트 초기화
 
 		// when
@@ -106,16 +102,15 @@ class ArticleRepositoryTest {
 	void findAllWithAuthor_Pagination() {
 		// given
 		Member author2 = MemberFixture.createLocalMember("author2@example.com", "Author2");
-		author2 = entityManager.persistAndFlush(author2);
+		author2 = memberRepository.save(author2);
 
 		Article article1 = ArticleFixture.createArticle(author, "Article 1");
 		Article article2 = ArticleFixture.createArticle(author, "Article 2");
 		Article article3 = ArticleFixture.createArticle(author2, "Article 3");
 
-		entityManager.persist(article1);
-		entityManager.persist(article2);
-		entityManager.persist(article3);
-		entityManager.flush();
+		articleRepository.save(article1);
+		articleRepository.save(article2);
+		articleRepository.save(article3);
 		entityManager.clear();
 
 		Pageable pageable = PageRequest.of(0, 2);
@@ -142,10 +137,9 @@ class ArticleRepositoryTest {
 		Article article2 = ArticleFixture.createArticle(author, "Java Programming");
 		Article article3 = ArticleFixture.createArticle(author, "Spring Security Guide");
 
-		entityManager.persist(article1);
-		entityManager.persist(article2);
-		entityManager.persist(article3);
-		entityManager.flush();
+		articleRepository.save(article1);
+		articleRepository.save(article2);
+		articleRepository.save(article3);
 		entityManager.clear();
 
 		Pageable pageable = PageRequest.of(0, 10);
@@ -167,14 +161,13 @@ class ArticleRepositoryTest {
 	void findByTitleOrAuthorNameContaining_ByAuthorName() {
 		// given
 		Member author2 = MemberFixture.createLocalMember("author2@example.com", "Alice");
-		author2 = entityManager.persistAndFlush(author2);
+		author2 = memberRepository.save(author2);
 
 		Article article1 = ArticleFixture.createArticle(author, "Article by Author");
 		Article article2 = ArticleFixture.createArticle(author2, "Article by Alice");
 
-		entityManager.persist(article1);
-		entityManager.persist(article2);
-		entityManager.flush();
+		articleRepository.save(article1);
+		articleRepository.save(article2);
 		entityManager.clear();
 
 		Pageable pageable = PageRequest.of(0, 10);
@@ -192,7 +185,7 @@ class ArticleRepositoryTest {
 	void findByTitleOrAuthorNameContaining_NoResults() {
 		// given
 		Article article = ArticleFixture.createArticle(author, "Test Article");
-		entityManager.persistAndFlush(article);
+		articleRepository.save(article);
 		entityManager.clear();
 
 		Pageable pageable = PageRequest.of(0, 10);
@@ -210,14 +203,16 @@ class ArticleRepositoryTest {
 	void saveWithDuplicateTitle_ThrowsException() {
 		// given
 		Article article1 = ArticleFixture.createArticle(author, "Duplicate Title");
-		entityManager.persistAndFlush(article1);
+		articleRepository.save(article1);
+		entityManager.flush();
 		entityManager.clear();
 
 		Article article2 = ArticleFixture.createArticle(author, "Duplicate Title");
 
 		// when & then
 		assertThatThrownBy(() -> {
-			entityManager.persistAndFlush(article2);
+			articleRepository.save(article2);
+			entityManager.flush();  // flush to trigger constraint check
 		}).isInstanceOf(DataIntegrityViolationException.class);
 	}
 

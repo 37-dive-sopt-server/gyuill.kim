@@ -7,17 +7,13 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.sopt.annotation.RepositoryTest;
 import org.sopt.domain.auth.domain.entity.RefreshToken;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.test.context.ActiveProfiles;
 
-@DataJpaTest
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@ActiveProfiles("test")
+@RepositoryTest
 class RefreshTokenRepositoryTest {
 
 	@Autowired
@@ -192,14 +188,16 @@ class RefreshTokenRepositoryTest {
 	void saveWithDuplicateToken_ThrowsException() {
 		// given
 		RefreshToken token1 = RefreshToken.create(1L, "duplicate-token", LocalDateTime.now().plusDays(1));
-		entityManager.persistAndFlush(token1);
+		refreshTokenRepository.save(token1);
+		entityManager.flush();
 		entityManager.clear();
 
 		RefreshToken token2 = RefreshToken.create(2L, "duplicate-token", LocalDateTime.now().plusDays(1));
 
 		// when & then
 		assertThatThrownBy(() -> {
-			entityManager.persistAndFlush(token2);
+			refreshTokenRepository.save(token2);
+			entityManager.flush();  // flush to trigger constraint check
 		}).isInstanceOf(DataIntegrityViolationException.class);
 	}
 

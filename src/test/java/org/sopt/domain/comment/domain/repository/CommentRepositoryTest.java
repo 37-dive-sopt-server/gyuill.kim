@@ -8,6 +8,7 @@ import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.sopt.annotation.RepositoryTest;
 import org.sopt.domain.article.domain.entity.Article;
 import org.sopt.domain.article.domain.repository.ArticleRepository;
 import org.sopt.domain.comment.domain.entity.Comment;
@@ -17,17 +18,12 @@ import org.sopt.fixture.ArticleFixture;
 import org.sopt.fixture.CommentFixture;
 import org.sopt.fixture.MemberFixture;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.test.context.ActiveProfiles;
 
-@DataJpaTest
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@ActiveProfiles("test")
+@RepositoryTest
 class CommentRepositoryTest {
 
 	@Autowired
@@ -48,10 +44,10 @@ class CommentRepositoryTest {
 	@BeforeEach
 	void setUp() {
 		author = MemberFixture.createLocalMember("author@example.com", "Author");
-		author = entityManager.persistAndFlush(author);
+		author = memberRepository.save(author);
 
 		article = ArticleFixture.createArticle(author, "Test Article");
-		article = entityManager.persistAndFlush(article);
+		article = articleRepository.save(article);
 	}
 
 	@Test
@@ -59,7 +55,7 @@ class CommentRepositoryTest {
 	void findByIdWithAuthor_Success() {
 		// given
 		Comment comment = CommentFixture.createComment(article, author, "Test comment");
-		Comment saved = entityManager.persistAndFlush(comment);
+		Comment saved = commentRepository.save(comment);
 		entityManager.clear();
 
 		// when
@@ -90,7 +86,7 @@ class CommentRepositoryTest {
 	void findByIdWithDetails_Success() {
 		// given
 		Comment comment = CommentFixture.createComment(article, author, "Detailed comment");
-		Comment saved = entityManager.persistAndFlush(comment);
+		Comment saved = commentRepository.save(comment);
 		entityManager.clear();
 
 		// when
@@ -123,10 +119,10 @@ class CommentRepositoryTest {
 	void findByAuthorIdWithArticle_Pagination() {
 		// given
 		Member author2 = MemberFixture.createLocalMember("author2@example.com", "Author2");
-		author2 = entityManager.persistAndFlush(author2);
+		author2 = memberRepository.save(author2);
 
 		Article article2 = ArticleFixture.createArticle(author, "Article 2");
-		article2 = entityManager.persistAndFlush(article2);
+		article2 = articleRepository.save(article2);
 
 		// author가 작성한 댓글 3개
 		Comment comment1 = CommentFixture.createComment(article, author, "Comment 1");
@@ -136,11 +132,10 @@ class CommentRepositoryTest {
 		// author2가 작성한 댓글 1개
 		Comment comment4 = CommentFixture.createComment(article, author2, "Comment by Author2");
 
-		entityManager.persist(comment1);
-		entityManager.persist(comment2);
-		entityManager.persist(comment3);
-		entityManager.persist(comment4);
-		entityManager.flush();
+		commentRepository.save(comment1);
+		commentRepository.save(comment2);
+		commentRepository.save(comment3);
+		commentRepository.save(comment4);
 		entityManager.clear();
 
 		Pageable pageable = PageRequest.of(0, 2);
@@ -164,7 +159,7 @@ class CommentRepositoryTest {
 	void findByAuthorIdWithArticle_NoComments() {
 		// given
 		Member emptyAuthor = MemberFixture.createLocalMember("empty@example.com", "Empty Author");
-		emptyAuthor = entityManager.persistAndFlush(emptyAuthor);
+		emptyAuthor = memberRepository.save(emptyAuthor);
 
 		Pageable pageable = PageRequest.of(0, 10);
 
@@ -181,16 +176,15 @@ class CommentRepositoryTest {
 	void findByArticleIdWithAuthor_Success() {
 		// given
 		Member author2 = MemberFixture.createLocalMember("author2@example.com", "Author2");
-		author2 = entityManager.persistAndFlush(author2);
+		author2 = memberRepository.save(author2);
 
 		Comment comment1 = CommentFixture.createComment(article, author, "First comment");
 		Comment comment2 = CommentFixture.createComment(article, author2, "Second comment");
 		Comment comment3 = CommentFixture.createComment(article, author, "Third comment");
 
-		entityManager.persist(comment1);
-		entityManager.persist(comment2);
-		entityManager.persist(comment3);
-		entityManager.flush();
+		commentRepository.save(comment1);
+		commentRepository.save(comment2);
+		commentRepository.save(comment3);
 		entityManager.clear();
 
 		// when
@@ -210,7 +204,7 @@ class CommentRepositoryTest {
 	void findByArticleIdWithAuthor_NoComments() {
 		// given
 		Article emptyArticle = ArticleFixture.createArticle(author, "Empty Article");
-		emptyArticle = entityManager.persistAndFlush(emptyArticle);
+		emptyArticle = articleRepository.save(emptyArticle);
 
 		// when
 		List<Comment> result = commentRepository.findByArticleIdWithAuthor(emptyArticle.getId());
@@ -240,13 +234,12 @@ class CommentRepositoryTest {
 	void delete_Success() {
 		// given
 		Comment comment = CommentFixture.createComment(article, author, "To be deleted");
-		Comment saved = entityManager.persistAndFlush(comment);
+		Comment saved = commentRepository.save(comment);
 		Long commentId = saved.getId();
 		entityManager.clear();
 
 		// when
 		commentRepository.deleteById(commentId);
-		entityManager.flush();
 
 		// then
 		Optional<Comment> result = commentRepository.findById(commentId);

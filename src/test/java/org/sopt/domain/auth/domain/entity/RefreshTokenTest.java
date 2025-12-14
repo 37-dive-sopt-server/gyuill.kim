@@ -116,7 +116,7 @@ class RefreshTokenTest {
 
 	@Test
 	@DisplayName("동일한 memberId로 여러 토큰 생성 가능 (객체 레벨)")
-	void create_MultipleTok ensForSameMember() {
+	void create_MultipleTokensForSameMember() {
 		// given
 		Long memberId = 100L;
 

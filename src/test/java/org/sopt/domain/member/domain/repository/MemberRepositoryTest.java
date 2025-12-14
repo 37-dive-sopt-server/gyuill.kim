@@ -6,19 +6,15 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.sopt.annotation.RepositoryTest;
 import org.sopt.domain.member.domain.entity.Member;
 import org.sopt.domain.member.domain.entity.SocialProvider;
 import org.sopt.fixture.MemberFixture;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.test.context.ActiveProfiles;
 
-@DataJpaTest
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@ActiveProfiles("test")
+@RepositoryTest
 class MemberRepositoryTest {
 
 	@Autowired
@@ -116,14 +112,16 @@ class MemberRepositoryTest {
 	void saveWithDuplicateEmail_ThrowsException() {
 		// given
 		Member member1 = MemberFixture.createLocalMember("duplicate@example.com", "User 1");
-		entityManager.persistAndFlush(member1);
+		memberRepository.save(member1);
+		entityManager.flush();
 		entityManager.clear();
 
 		Member member2 = MemberFixture.createLocalMember("duplicate@example.com", "User 2");
 
 		// when & then
 		assertThatThrownBy(() -> {
-			entityManager.persistAndFlush(member2);
+			memberRepository.save(member2);
+			entityManager.flush();  // flush to trigger constraint check
 		}).isInstanceOf(DataIntegrityViolationException.class);
 	}
 
