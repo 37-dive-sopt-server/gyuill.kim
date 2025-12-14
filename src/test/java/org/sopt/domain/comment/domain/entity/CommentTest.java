@@ -42,7 +42,7 @@ class CommentTest {
 	@DisplayName("댓글 내용 수정 성공")
 	void updateContent_Success() {
 		// given
-		Comment comment = CommentFixture.createComment(article, author, "Original content");
+		Comment comment = CommentFixture.createCommentWithContent(article, author, "Original content");
 
 		// when
 		comment.updateContent("Updated content");
@@ -105,7 +105,7 @@ class CommentTest {
 	@DisplayName("댓글 내용을 빈 문자열로 수정")
 	void updateContent_EmptyString() {
 		// given
-		Comment comment = CommentFixture.createComment(article, author, "Original content");
+		Comment comment = CommentFixture.createCommentWithContent(article, author, "Original content");
 
 		// when
 		comment.updateContent("");
@@ -119,7 +119,7 @@ class CommentTest {
 	void updateContent_SameContent() {
 		// given
 		String originalContent = "Same content";
-		Comment comment = CommentFixture.createComment(article, author, originalContent);
+		Comment comment = CommentFixture.createCommentWithContent(article, author, originalContent);
 
 		// when
 		comment.updateContent("Same content");

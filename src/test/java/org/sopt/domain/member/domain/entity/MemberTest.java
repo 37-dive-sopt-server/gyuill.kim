@@ -58,27 +58,17 @@ class MemberTest {
 	}
 
 	@Test
-	@DisplayName("로컬 회원은 password가 필수")
-	void localMember_HasPassword() {
+	@DisplayName("로컬 회원 vs 소셜 회원 - 필수 필드 차이 검증")
+	void localVsSocialMember_RequiredFieldsDifference() {
 		// given & when
-		Member member = Member.create(
+		Member localMember = Member.create(
 			"password123",
-			"User",
+			"Local User",
 			LocalDate.of(1995, 5, 15),
 			"local@example.com",
 			Gender.FEMALE
 		);
-
-		// then
-		assertThat(member.getPassword()).isNotNull();
-		assertThat(member.getPassword()).isEqualTo("password123");
-	}
-
-	@Test
-	@DisplayName("소셜 회원은 password가 null")
-	void socialMember_HasNoPassword() {
-		// given & when
-		Member member = Member.createSocialMember(
+		Member socialMember = Member.createSocialMember(
 			"social@example.com",
 			"Social User",
 			SocialProvider.KAKAO,
@@ -86,49 +76,29 @@ class MemberTest {
 			null
 		);
 
-		// then
-		assertThat(member.getPassword()).isNull();
+		// then - 로컬 회원은 password 필수, provider는 LOCAL
+		assertThat(localMember.getPassword()).isEqualTo("password123");
+		assertThat(localMember.getProvider()).isEqualTo(SocialProvider.LOCAL);
+		assertThat(localMember.getProviderId()).isNull();
+
+		// then - 소셜 회원은 password 없음, providerId 필수
+		assertThat(socialMember.getPassword()).isNull();
+		assertThat(socialMember.getProvider()).isEqualTo(SocialProvider.KAKAO);
+		assertThat(socialMember.getProviderId()).isEqualTo("kakao-456");
 	}
 
 	@Test
-	@DisplayName("로컬 회원의 provider는 LOCAL")
-	void localMember_ProviderIsLocal() {
+	@DisplayName("다양한 소셜 Provider 지원")
+	void socialMember_VariousProviders() {
 		// given & when
-		Member member = Member.create(
-			"password",
-			"User",
-			LocalDate.of(2000, 1, 1),
-			"test@example.com",
-			Gender.MALE
-		);
-
-		// then
-		assertThat(member.getProvider()).isEqualTo(SocialProvider.LOCAL);
-		assertThat(member.getProviderId()).isNull();
-	}
-
-	@Test
-	@DisplayName("소셜 회원 - Google provider")
-	void socialMember_GoogleProvider() {
-		// given & when
-		Member member = Member.createSocialMember(
+		Member googleMember = Member.createSocialMember(
 			"google@example.com",
 			"Google User",
 			SocialProvider.GOOGLE,
 			"google-789",
 			"https://google.com/profile.jpg"
 		);
-
-		// then
-		assertThat(member.getProvider()).isEqualTo(SocialProvider.GOOGLE);
-		assertThat(member.getProviderId()).isEqualTo("google-789");
-	}
-
-	@Test
-	@DisplayName("소셜 회원 - Kakao provider")
-	void socialMember_KakaoProvider() {
-		// given & when
-		Member member = Member.createSocialMember(
+		Member kakaoMember = Member.createSocialMember(
 			"kakao@example.com",
 			"Kakao User",
 			SocialProvider.KAKAO,
@@ -136,9 +106,12 @@ class MemberTest {
 			"https://kakao.com/profile.jpg"
 		);
 
-		// then
-		assertThat(member.getProvider()).isEqualTo(SocialProvider.KAKAO);
-		assertThat(member.getProviderId()).isEqualTo("kakao-101");
+		// then - 각 Provider가 올바르게 설정됨
+		assertThat(googleMember.getProvider()).isEqualTo(SocialProvider.GOOGLE);
+		assertThat(googleMember.getProviderId()).isEqualTo("google-789");
+
+		assertThat(kakaoMember.getProvider()).isEqualTo(SocialProvider.KAKAO);
+		assertThat(kakaoMember.getProviderId()).isEqualTo("kakao-101");
 	}
 
 	@Test

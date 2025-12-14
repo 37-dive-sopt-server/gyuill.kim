@@ -9,22 +9,32 @@ public class CommentFixture {
 
 	private static final String DEFAULT_CONTENT = "Test comment content";
 
-	public static Comment createComment(Article article, Member author, String content) {
+	/**
+	 * 기본 댓글 생성 (기본 content 사용)
+	 */
+	public static Comment createComment(Article article, Member author) {
+		return createCommentWithContent(article, author, DEFAULT_CONTENT);
+	}
+
+	/**
+	 * 커스텀 content로 댓글 생성
+	 */
+	public static Comment createCommentWithContent(Article article, Member author, String content) {
 		return Comment.create(article, author, content);
 	}
 
-	public static Comment createComment(Article article, Member author) {
-		return Comment.create(article, author, DEFAULT_CONTENT);
-	}
-
+	/**
+	 * ID를 가진 댓글 생성 (기본 content 사용)
+	 */
 	public static Comment createCommentWithId(Long id, Article article, Member author) {
-		Comment comment = createComment(article, author);
-		ReflectionTestUtils.setField(comment, "id", id);
-		return comment;
+		return createCommentWithIdAndContent(id, article, author, DEFAULT_CONTENT);
 	}
 
-	public static Comment createCommentWithId(Long id, Article article, Member author, String content) {
-		Comment comment = createComment(article, author, content);
+	/**
+	 * ID와 커스텀 content로 댓글 생성
+	 */
+	public static Comment createCommentWithIdAndContent(Long id, Article article, Member author, String content) {
+		Comment comment = createCommentWithContent(article, author, content);
 		ReflectionTestUtils.setField(comment, "id", id);
 		return comment;
 	}

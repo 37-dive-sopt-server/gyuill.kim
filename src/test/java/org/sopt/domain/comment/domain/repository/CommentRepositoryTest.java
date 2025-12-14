@@ -54,7 +54,7 @@ class CommentRepositoryTest {
 	@DisplayName("ID와 작성자 함께 조회 - JOIN FETCH 사용")
 	void findByIdWithAuthor_Success() {
 		// given
-		Comment comment = CommentFixture.createComment(article, author, "Test comment");
+		Comment comment = CommentFixture.createCommentWithContent(article, author, "Test comment");
 		Comment saved = commentRepository.save(comment);
 		entityManager.clear();
 
@@ -85,7 +85,7 @@ class CommentRepositoryTest {
 	@DisplayName("ID와 작성자, 게시글 함께 조회 - JOIN FETCH 사용")
 	void findByIdWithDetails_Success() {
 		// given
-		Comment comment = CommentFixture.createComment(article, author, "Detailed comment");
+		Comment comment = CommentFixture.createCommentWithContent(article, author, "Detailed comment");
 		Comment saved = commentRepository.save(comment);
 		entityManager.clear();
 
@@ -125,12 +125,12 @@ class CommentRepositoryTest {
 		article2 = articleRepository.save(article2);
 
 		// author가 작성한 댓글 3개
-		Comment comment1 = CommentFixture.createComment(article, author, "Comment 1");
-		Comment comment2 = CommentFixture.createComment(article2, author, "Comment 2");
-		Comment comment3 = CommentFixture.createComment(article, author, "Comment 3");
+		Comment comment1 = CommentFixture.createCommentWithContent(article, author, "Comment 1");
+		Comment comment2 = CommentFixture.createCommentWithContent(article2, author, "Comment 2");
+		Comment comment3 = CommentFixture.createCommentWithContent(article, author, "Comment 3");
 
 		// author2가 작성한 댓글 1개
-		Comment comment4 = CommentFixture.createComment(article, author2, "Comment by Author2");
+		Comment comment4 = CommentFixture.createCommentWithContent(article, author2, "Comment by Author2");
 
 		commentRepository.save(comment1);
 		commentRepository.save(comment2);
@@ -178,9 +178,9 @@ class CommentRepositoryTest {
 		Member author2 = MemberFixture.createLocalMember("author2@example.com", "Author2");
 		author2 = memberRepository.save(author2);
 
-		Comment comment1 = CommentFixture.createComment(article, author, "First comment");
-		Comment comment2 = CommentFixture.createComment(article, author2, "Second comment");
-		Comment comment3 = CommentFixture.createComment(article, author, "Third comment");
+		Comment comment1 = CommentFixture.createCommentWithContent(article, author, "First comment");
+		Comment comment2 = CommentFixture.createCommentWithContent(article, author2, "Second comment");
+		Comment comment3 = CommentFixture.createCommentWithContent(article, author, "Third comment");
 
 		commentRepository.save(comment1);
 		commentRepository.save(comment2);
@@ -217,7 +217,7 @@ class CommentRepositoryTest {
 	@DisplayName("댓글 저장 및 ID 자동 생성 확인")
 	void save_GeneratesId() {
 		// given
-		Comment comment = CommentFixture.createComment(article, author, "New comment");
+		Comment comment = CommentFixture.createCommentWithContent(article, author, "New comment");
 
 		// when
 		Comment saved = commentRepository.save(comment);
@@ -233,7 +233,7 @@ class CommentRepositoryTest {
 	@DisplayName("댓글 삭제")
 	void delete_Success() {
 		// given
-		Comment comment = CommentFixture.createComment(article, author, "To be deleted");
+		Comment comment = CommentFixture.createCommentWithContent(article, author, "To be deleted");
 		Comment saved = commentRepository.save(comment);
 		Long commentId = saved.getId();
 		entityManager.clear();

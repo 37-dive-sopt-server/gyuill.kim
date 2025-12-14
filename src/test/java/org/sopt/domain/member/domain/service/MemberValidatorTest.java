@@ -8,7 +8,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.stream.Stream;
 import org.sopt.domain.member.domain.entity.Gender;
 import org.sopt.domain.member.domain.entity.Member;
 import org.sopt.domain.member.exception.MemberException;
@@ -35,37 +39,22 @@ class MemberValidatorTest {
 		);
 	}
 
-	@Test
-	@DisplayName("생년월일이 null인 경우 예외 발생")
-	void validateBirthDate_Null_ThrowsException() {
+	@ParameterizedTest(name = "{0}")
+	@DisplayName("생년월일 검증 실패 케이스")
+	@MethodSource("provideBirthDateInvalidCases")
+	void validateBirthDate_InvalidCases_ThrowsException(String testName, LocalDate birthDate, ErrorCode expectedErrorCode) {
 		// when & then
-		assertThatThrownBy(() -> memberValidator.validateBirthDate(null))
+		assertThatThrownBy(() -> memberValidator.validateBirthDate(birthDate))
 			.isInstanceOf(MemberException.class)
-			.hasFieldOrPropertyWithValue("errorCode", ErrorCode.BIRTH_DATE_REQUIRED);
+			.hasFieldOrPropertyWithValue("errorCode", expectedErrorCode);
 	}
 
-	@Test
-	@DisplayName("생년월일이 미래인 경우 예외 발생")
-	void validateBirthDate_Future_ThrowsException() {
-		// given
-		LocalDate futureBirthDate = LocalDate.now().plusDays(1);
-
-		// when & then
-		assertThatThrownBy(() -> memberValidator.validateBirthDate(futureBirthDate))
-			.isInstanceOf(MemberException.class)
-			.hasFieldOrPropertyWithValue("errorCode", ErrorCode.BIRTH_DATE_FUTURE);
-	}
-
-	@Test
-	@DisplayName("나이가 20세 미만인 경우 예외 발생")
-	void validateBirthDate_Under20_ThrowsException() {
-		// given
-		LocalDate under20BirthDate = LocalDate.now().minusYears(19);
-
-		// when & then
-		assertThatThrownBy(() -> memberValidator.validateBirthDate(under20BirthDate))
-			.isInstanceOf(MemberException.class)
-			.hasFieldOrPropertyWithValue("errorCode", ErrorCode.AGE_UNDER_20);
+	private static Stream<Arguments> provideBirthDateInvalidCases() {
+		return Stream.of(
+			Arguments.of("null인 경우", null, ErrorCode.BIRTH_DATE_REQUIRED),
+			Arguments.of("미래인 경우", LocalDate.now().plusDays(1), ErrorCode.BIRTH_DATE_FUTURE),
+			Arguments.of("20세 미만인 경우", LocalDate.now().minusYears(19), ErrorCode.AGE_UNDER_20)
+		);
 	}
 
 	@ParameterizedTest
@@ -138,58 +127,29 @@ class MemberValidatorTest {
 		assertThat(member.getGender()).isEqualTo(gender);
 	}
 
-	@Test
-	@DisplayName("생년월일 검증 실패 시 회원 생성 실패 - null")
-	void createValidatedMember_NullBirthDate_ThrowsException() {
+	@ParameterizedTest(name = "{0}")
+	@DisplayName("생년월일 검증 실패 시 회원 생성 실패")
+	@MethodSource("provideInvalidMemberCreationCases")
+	void createValidatedMember_InvalidBirthDate_ThrowsException(String testName, LocalDate birthDate, ErrorCode expectedErrorCode) {
 		// when & then
 		assertThatThrownBy(() ->
 			memberValidator.createValidatedMember(
 				"password",
-				"User",
-				null,
+				"Test User",
+				birthDate,
 				"test@example.com",
 				Gender.MALE
 			)
 		).isInstanceOf(MemberException.class)
-			.hasFieldOrPropertyWithValue("errorCode", ErrorCode.BIRTH_DATE_REQUIRED);
+			.hasFieldOrPropertyWithValue("errorCode", expectedErrorCode);
 	}
 
-	@Test
-	@DisplayName("생년월일 검증 실패 시 회원 생성 실패 - 미래")
-	void createValidatedMember_FutureBirthDate_ThrowsException() {
-		// given
-		LocalDate futureDate = LocalDate.now().plusDays(10);
-
-		// when & then
-		assertThatThrownBy(() ->
-			memberValidator.createValidatedMember(
-				"password",
-				"User",
-				futureDate,
-				"test@example.com",
-				Gender.FEMALE
-			)
-		).isInstanceOf(MemberException.class)
-			.hasFieldOrPropertyWithValue("errorCode", ErrorCode.BIRTH_DATE_FUTURE);
-	}
-
-	@Test
-	@DisplayName("생년월일 검증 실패 시 회원 생성 실패 - 20세 미만")
-	void createValidatedMember_Under20_ThrowsException() {
-		// given
-		LocalDate under20Date = LocalDate.now().minusYears(18);
-
-		// when & then
-		assertThatThrownBy(() ->
-			memberValidator.createValidatedMember(
-				"password",
-				"Young User",
-				under20Date,
-				"young@example.com",
-				Gender.MALE
-			)
-		).isInstanceOf(MemberException.class)
-			.hasFieldOrPropertyWithValue("errorCode", ErrorCode.AGE_UNDER_20);
+	private static Stream<Arguments> provideInvalidMemberCreationCases() {
+		return Stream.of(
+			Arguments.of("null 생년월일", null, ErrorCode.BIRTH_DATE_REQUIRED),
+			Arguments.of("미래 생년월일", LocalDate.now().plusDays(10), ErrorCode.BIRTH_DATE_FUTURE),
+			Arguments.of("20세 미만", LocalDate.now().minusYears(18), ErrorCode.AGE_UNDER_20)
+		);
 	}
 
 	@Test
