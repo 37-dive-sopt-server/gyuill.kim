@@ -7,16 +7,19 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 public class ArticleFixture {
 
+	private static final String DEFAULT_CONTENT = "Test content for article";
+	private static final Tag DEFAULT_TAG = Tag.CS;
+
 	public static Article createArticle(Member author, String title) {
-		return Article.create(author, title, "Test content for article", Tag.CS);
+		return Article.create(author, title, DEFAULT_CONTENT, DEFAULT_TAG);
 	}
 
 	public static Article createArticleWithTag(Member author, String title, Tag tag) {
-		return Article.create(author, title, "Test content for article", tag);
+		return Article.create(author, title, DEFAULT_CONTENT, tag);
 	}
 
 	public static Article createArticleWithContent(Member author, String title, String content) {
-		return Article.create(author, title, content, Tag.CS);
+		return Article.create(author, title, content, DEFAULT_TAG);
 	}
 
 	public static Article createArticleWithId(Long id, Member author, String title) {
