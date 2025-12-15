@@ -53,6 +53,12 @@ public class MemberFixture {
 		return member;
 	}
 
+	public static Member createMemberWithId(Long id, String email, String name, Gender gender) {
+		Member member = createLocalMember(email, name, gender);
+		ReflectionTestUtils.setField(member, "id", id);
+		return member;
+	}
+
 	public static Member createMemberWithPassword(String email, String name, String encodedPassword) {
 		return createLocalMember(email, name, encodedPassword, DEFAULT_BIRTH_DATE, DEFAULT_GENDER);
 	}
