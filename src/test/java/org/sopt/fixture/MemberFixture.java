@@ -27,16 +27,6 @@ public class MemberFixture {
 		return Member.create(password, name, birthDate, email, gender);
 	}
 
-	public static Member createLocalMemberWithAge(String email, String name, int age) {
-		return createLocalMember(
-			email,
-			name,
-			DEFAULT_PASSWORD,
-			LocalDate.now().minusYears(age),
-			DEFAULT_GENDER
-		);
-	}
-
 	public static Member createSocialMember(String email, String name, SocialProvider provider) {
 		return Member.createSocialMember(
 			email,
@@ -57,9 +47,5 @@ public class MemberFixture {
 		Member member = createLocalMember(email, name, gender);
 		ReflectionTestUtils.setField(member, "id", id);
 		return member;
-	}
-
-	public static Member createMemberWithPassword(String email, String name, String encodedPassword) {
-		return createLocalMember(email, name, encodedPassword, DEFAULT_BIRTH_DATE, DEFAULT_GENDER);
 	}
 }

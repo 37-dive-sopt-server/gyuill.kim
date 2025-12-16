@@ -18,18 +18,8 @@ public class ArticleFixture {
 		return Article.create(author, title, DEFAULT_CONTENT, tag);
 	}
 
-	public static Article createArticleWithContent(Member author, String title, String content) {
-		return Article.create(author, title, content, DEFAULT_TAG);
-	}
-
 	public static Article createArticleWithId(Long id, Member author, String title) {
 		Article article = createArticle(author, title);
-		ReflectionTestUtils.setField(article, "id", id);
-		return article;
-	}
-
-	public static Article createArticleWithIdAndTag(Long id, Member author, String title, Tag tag) {
-		Article article = createArticleWithTag(author, title, tag);
 		ReflectionTestUtils.setField(article, "id", id);
 		return article;
 	}
