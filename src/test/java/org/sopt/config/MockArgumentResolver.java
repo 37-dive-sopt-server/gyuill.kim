@@ -2,6 +2,7 @@ package org.sopt.config;
 
 import org.sopt.global.auth.security.CustomUserDetails;
 import org.springframework.core.MethodParameter;
+import org.springframework.lang.Nullable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -36,9 +37,9 @@ public class MockArgumentResolver implements HandlerMethodArgumentResolver {
 
 	@Override
 	public Object resolveArgument(
-		MethodParameter parameter,
+		@Nullable MethodParameter parameter,
 		ModelAndViewContainer mavContainer,
-		NativeWebRequest webRequest,
+		@Nullable NativeWebRequest webRequest,
 		WebDataBinderFactory binderFactory
 	) {
 		return new CustomUserDetails(memberId, email, password);
