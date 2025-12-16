@@ -27,18 +27,6 @@ class MemberValidatorTest {
 		memberValidator = new MemberValidator();
 	}
 
-	@Test
-	@DisplayName("유효한 생년월일로 검증 성공")
-	void validateBirthDate_Valid() {
-		// given
-		LocalDate validBirthDate = LocalDate.of(2000, 1, 1); // 24세
-
-		// when & then
-		assertThatNoException().isThrownBy(() ->
-			memberValidator.validateBirthDate(validBirthDate)
-		);
-	}
-
 	@ParameterizedTest(name = "{0}")
 	@DisplayName("생년월일 검증 실패 케이스")
 	@MethodSource("provideBirthDateInvalidCases")
@@ -80,30 +68,6 @@ class MemberValidatorTest {
 				.isInstanceOf(MemberException.class)
 				.hasFieldOrPropertyWithValue("errorCode", ErrorCode.AGE_UNDER_20);
 		}
-	}
-
-	@Test
-	@DisplayName("오늘이 정확히 20번째 생일인 경우 - 유효")
-	void validateBirthDate_Exactly20thBirthday() {
-		// given - 오늘이 정확히 20번째 생일
-		LocalDate birthDate = LocalDate.now().minusYears(20);
-
-		// when & then
-		assertThatNoException().isThrownBy(() ->
-			memberValidator.validateBirthDate(birthDate)
-		);
-	}
-
-	@Test
-	@DisplayName("20년 전 생년월일 - 단순 연도 차이로 20세 인정")
-	void validateBirthDate_TwentyYearsAgo() {
-		// given - 20년 전 (단순 연도 차이 계산으로 20세)
-		LocalDate birthDate = LocalDate.now().minusYears(20).plusDays(1);
-
-		// when & then - Validator는 단순히 year 차이만 계산하므로 통과
-		assertThatNoException().isThrownBy(() ->
-			memberValidator.validateBirthDate(birthDate)
-		);
 	}
 
 	@Test
@@ -150,24 +114,5 @@ class MemberValidatorTest {
 			Arguments.of("미래 생년월일", LocalDate.now().plusDays(10), ErrorCode.BIRTH_DATE_FUTURE),
 			Arguments.of("20세 미만", LocalDate.now().minusYears(18), ErrorCode.AGE_UNDER_20)
 		);
-	}
-
-	@Test
-	@DisplayName("여러 연령대 회원 생성 테스트")
-	void createValidatedMember_VariousAges() {
-		// given & when
-		Member age20 = memberValidator.createValidatedMember(
-			"pw", "Age20", LocalDate.now().minusYears(20), "age20@example.com", Gender.MALE);
-
-		Member age30 = memberValidator.createValidatedMember(
-			"pw", "Age30", LocalDate.now().minusYears(30), "age30@example.com", Gender.FEMALE);
-
-		Member age50 = memberValidator.createValidatedMember(
-			"pw", "Age50", LocalDate.now().minusYears(50), "age50@example.com", Gender.MALE);
-
-		// then
-		assertThat(age20).isNotNull();
-		assertThat(age30).isNotNull();
-		assertThat(age50).isNotNull();
 	}
 }

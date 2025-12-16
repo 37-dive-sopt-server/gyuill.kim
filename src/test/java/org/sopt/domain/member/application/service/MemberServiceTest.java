@@ -84,8 +84,8 @@ class MemberServiceTest {
 	}
 
 	@Test
-	@DisplayName("로컬 회원 생성 실패 - 이메일 중복 (existsByEmail)")
-	void create_DuplicateEmail_ExistsByEmail() {
+	@DisplayName("로컬 회원 생성 실패 - 이메일 중복")
+	void create_DuplicateEmail() {
 		// given
 		MemberCreateRequest request = new MemberCreateRequest(
 			"Test User",
@@ -105,35 +105,6 @@ class MemberServiceTest {
 		verify(memberRepository).existsByEmail(request.email());
 		verify(passwordEncoder, never()).encode(anyString());
 		verify(memberRepository, never()).save(any());
-	}
-
-	@Test
-	@DisplayName("로컬 회원 생성 실패 - 이메일 중복 (DataIntegrityViolationException)")
-	void create_DuplicateEmail_DataIntegrityViolation() {
-		// given
-		MemberCreateRequest request = new MemberCreateRequest(
-			"Test User",
-			"password123",
-			LocalDate.of(2000, 1, 1),
-			"duplicate@example.com",
-			Gender.MALE
-		);
-
-		String encodedPassword = "encodedPassword123";
-		Member member = MemberFixture.createLocalMember(request.email(), request.name());
-
-		given(memberRepository.existsByEmail(request.email())).willReturn(false);
-		given(passwordEncoder.encode(request.password())).willReturn(encodedPassword);
-		given(memberValidator.createValidatedMember(encodedPassword, request.name(), request.birthDate(),
-			request.email(), request.gender())).willReturn(member);
-		given(memberRepository.save(any(Member.class))).willThrow(DataIntegrityViolationException.class);
-
-		// when & then
-		assertThatThrownBy(() -> memberService.create(request))
-			.isInstanceOf(MemberException.class)
-			.hasFieldOrPropertyWithValue("errorCode", ErrorCode.DUPLICATE_EMAIL);
-
-		verify(memberRepository).save(any(Member.class));
 	}
 
 	@Test

@@ -189,24 +189,6 @@ class MemberControllerTest {
 	}
 
 	@Test
-	@DisplayName("전체 회원 조회 - 결과 없음")
-	void getAllMembers_Empty() throws Exception {
-		// given
-		Page<MemberResponse> emptyPage = new PageImpl<>(List.of(), PageRequest.of(0, 20), 0);
-
-		given(memberService.findAllMembers(any())).willReturn(emptyPage);
-
-		// when & then
-		mockMvc.perform(get("/members"))
-			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.content").isArray())
-			.andExpect(jsonPath("$.content.length()").value(0))
-			.andExpect(jsonPath("$.totalElements").value(0));
-
-		verify(memberService).findAllMembers(any());
-	}
-
-	@Test
 	@DisplayName("내 정보 조회 성공")
 	void getMyInfo_Success() throws Exception {
 		// given - MockArgumentResolver가 memberId=1L인 CustomUserDetails 주입

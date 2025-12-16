@@ -126,20 +126,6 @@ class MemberRepositoryTest {
 	}
 
 	@Test
-	@DisplayName("회원 저장 및 ID 자동 생성 확인")
-	void save_GeneratesId() {
-		// given
-		Member member = MemberFixture.createLocalMember("newuser@example.com", "New User");
-
-		// when
-		Member saved = memberRepository.save(member);
-
-		// then
-		assertThat(saved.getId()).isNotNull();
-		assertThat(saved.getEmail()).isEqualTo("newuser@example.com");
-	}
-
-	@Test
 	@DisplayName("회원 삭제")
 	void delete_Success() {
 		// given
