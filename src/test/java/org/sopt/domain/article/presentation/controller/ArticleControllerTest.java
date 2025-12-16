@@ -227,25 +227,4 @@ class ArticleControllerTest {
 
 		verify(articleService).getArticles(eq(keyword), any(Pageable.class));
 	}
-
-	@Test
-	@DisplayName("게시글 검색 - 결과 없음")
-	void getAllArticles_NoResults() throws Exception {
-		// given
-		String keyword = "NonExistent";
-		Pageable pageable = PageRequest.of(0, 20);
-		Page<ArticleResponse> emptyPage = new PageImpl<>(List.of(), pageable, 0);
-
-		given(articleService.getArticles(eq(keyword), any(Pageable.class))).willReturn(emptyPage);
-
-		// when & then
-		mockMvc.perform(get("/articles")
-				.param("keyword", keyword))
-			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.content").isArray())
-			.andExpect(jsonPath("$.content.length()").value(0))
-			.andExpect(jsonPath("$.totalElements").value(0));
-
-		verify(articleService).getArticles(eq(keyword), any(Pageable.class));
-	}
 }

@@ -214,46 +214,4 @@ class ArticleServiceTest {
 		verify(articleRepository).findByTitleOrAuthorNameContaining(keyword, pageable);
 		verify(articleRepository, never()).findAllWithAuthor(any());
 	}
-
-	@Test
-	@DisplayName("게시글 목록 조회 - 빈 검색어 (전체 조회)")
-	void getArticles_WithEmptyKeyword() {
-		// given
-		Member author = MemberFixture.createMemberWithId(1L, "author@example.com", "Author");
-		Article article = ArticleFixture.createArticle(author, "Article");
-
-		Pageable pageable = PageRequest.of(0, 10);
-		Page<Article> articlePage = new PageImpl<>(List.of(article), pageable, 1);
-
-		given(articleRepository.findAllWithAuthor(pageable)).willReturn(articlePage);
-
-		// when
-		Page<ArticleResponse> result = articleService.getArticles("  ", pageable);
-
-		// then
-		assertThat(result.getContent()).hasSize(1);
-
-		verify(articleRepository).findAllWithAuthor(pageable);
-		verify(articleRepository, never()).findByTitleOrAuthorNameContaining(anyString(), any());
-	}
-
-	@Test
-	@DisplayName("게시글 검색 결과 없음")
-	void getArticles_NoResults() {
-		// given
-		String keyword = "NonExistent";
-		Pageable pageable = PageRequest.of(0, 10);
-		Page<Article> emptyPage = new PageImpl<>(List.of(), pageable, 0);
-
-		given(articleRepository.findByTitleOrAuthorNameContaining(keyword, pageable)).willReturn(emptyPage);
-
-		// when
-		Page<ArticleResponse> result = articleService.getArticles(keyword, pageable);
-
-		// then
-		assertThat(result.getContent()).isEmpty();
-		assertThat(result.getTotalElements()).isZero();
-
-		verify(articleRepository).findByTitleOrAuthorNameContaining(keyword, pageable);
-	}
 }

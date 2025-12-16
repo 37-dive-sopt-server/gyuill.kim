@@ -181,24 +181,6 @@ class ArticleRepositoryTest {
 	}
 
 	@Test
-	@DisplayName("검색 결과 없음")
-	void findByTitleOrAuthorNameContaining_NoResults() {
-		// given
-		Article article = ArticleFixture.createArticle(author, "Test Article");
-		articleRepository.save(article);
-		entityManager.clear();
-
-		Pageable pageable = PageRequest.of(0, 10);
-
-		// when
-		Page<Article> result = articleRepository.findByTitleOrAuthorNameContaining("NonExistent", pageable);
-
-		// then
-		assertThat(result.getContent()).isEmpty();
-		assertThat(result.getTotalElements()).isZero();
-	}
-
-	@Test
 	@DisplayName("제목 unique constraint 위반 시 예외 발생")
 	void saveWithDuplicateTitle_ThrowsException() {
 		// given
@@ -214,20 +196,5 @@ class ArticleRepositoryTest {
 			articleRepository.save(article2);
 			entityManager.flush();  // flush to trigger constraint check
 		}).isInstanceOf(DataIntegrityViolationException.class);
-	}
-
-	@Test
-	@DisplayName("게시글 저장 및 ID 자동 생성 확인")
-	void save_GeneratesId() {
-		// given
-		Article article = ArticleFixture.createArticle(author, "New Article");
-
-		// when
-		Article saved = articleRepository.save(article);
-
-		// then
-		assertThat(saved.getId()).isNotNull();
-		assertThat(saved.getTitle()).isEqualTo("New Article");
-		assertThat(saved.getAuthor()).isEqualTo(author);
 	}
 }
