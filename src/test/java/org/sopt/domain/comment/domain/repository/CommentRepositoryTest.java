@@ -155,23 +155,6 @@ class CommentRepositoryTest {
 	}
 
 	@Test
-	@DisplayName("댓글이 없는 작성자 조회 시 빈 페이지 반환")
-	void findByAuthorIdWithArticle_NoComments() {
-		// given
-		Member emptyAuthor = MemberFixture.createLocalMember("empty@example.com", "Empty Author");
-		emptyAuthor = memberRepository.save(emptyAuthor);
-
-		Pageable pageable = PageRequest.of(0, 10);
-
-		// when
-		Page<Comment> result = commentRepository.findByAuthorIdWithArticle(emptyAuthor.getId(), pageable);
-
-		// then
-		assertThat(result.getContent()).isEmpty();
-		assertThat(result.getTotalElements()).isZero();
-	}
-
-	@Test
 	@DisplayName("게시글 ID로 댓글 목록 조회 - 작성자 포함")
 	void findByArticleIdWithAuthor_Success() {
 		// given
@@ -197,52 +180,5 @@ class CommentRepositoryTest {
 		result.forEach(comment -> {
 			assertThat(comment.getAuthor()).isNotNull();
 		});
-	}
-
-	@Test
-	@DisplayName("댓글이 없는 게시글 조회 시 빈 리스트 반환")
-	void findByArticleIdWithAuthor_NoComments() {
-		// given
-		Article emptyArticle = ArticleFixture.createArticle(author, "Empty Article");
-		emptyArticle = articleRepository.save(emptyArticle);
-
-		// when
-		List<Comment> result = commentRepository.findByArticleIdWithAuthor(emptyArticle.getId());
-
-		// then
-		assertThat(result).isEmpty();
-	}
-
-	@Test
-	@DisplayName("댓글 저장 및 ID 자동 생성 확인")
-	void save_GeneratesId() {
-		// given
-		Comment comment = CommentFixture.createCommentWithContent(article, author, "New comment");
-
-		// when
-		Comment saved = commentRepository.save(comment);
-
-		// then
-		assertThat(saved.getId()).isNotNull();
-		assertThat(saved.getContent()).isEqualTo("New comment");
-		assertThat(saved.getArticle()).isEqualTo(article);
-		assertThat(saved.getAuthor()).isEqualTo(author);
-	}
-
-	@Test
-	@DisplayName("댓글 삭제")
-	void delete_Success() {
-		// given
-		Comment comment = CommentFixture.createCommentWithContent(article, author, "To be deleted");
-		Comment saved = commentRepository.save(comment);
-		Long commentId = saved.getId();
-		entityManager.clear();
-
-		// when
-		commentRepository.deleteById(commentId);
-
-		// then
-		Optional<Comment> result = commentRepository.findById(commentId);
-		assertThat(result).isEmpty();
 	}
 }

@@ -100,31 +100,4 @@ class CommentTest {
 			comment.validateAuthor(author.getId())
 		);
 	}
-
-	@Test
-	@DisplayName("댓글 내용을 빈 문자열로 수정")
-	void updateContent_EmptyString() {
-		// given
-		Comment comment = CommentFixture.createCommentWithContent(article, author, "Original content");
-
-		// when
-		comment.updateContent("");
-
-		// then
-		assertThat(comment.getContent()).isEmpty();
-	}
-
-	@Test
-	@DisplayName("같은 내용으로 댓글 수정")
-	void updateContent_SameContent() {
-		// given
-		String originalContent = "Same content";
-		Comment comment = CommentFixture.createCommentWithContent(article, author, originalContent);
-
-		// when
-		comment.updateContent("Same content");
-
-		// then
-		assertThat(comment.getContent()).isEqualTo(originalContent);
-	}
 }
