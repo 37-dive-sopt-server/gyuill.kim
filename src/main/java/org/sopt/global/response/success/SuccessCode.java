@@ -11,6 +11,11 @@ public enum SuccessCode implements SuccessType {
 	ARTICLE_CREATED("AR201", "게시글 작성 성공"),
 	ARTICLE_VIEW("AR202", "게시글 조회 성공"),
 
+	COMMENT_CREATED("CO201", "댓글 작성 성공"),
+	COMMENT_VIEW("CO202", "댓글 조회 성공"),
+	COMMENT_UPDATED("CO203", "댓글 수정 성공"),
+	COMMENT_DELETED("CO204", "댓글 삭제 성공"),
+
 	LOGIN_SUCCESS("AU201", "로그인 성공"),
 	TOKEN_REFRESH_SUCCESS("AU202", "토큰 갱신 성공"),
 	LOGOUT_SUCCESS("AU203", "로그아웃 성공"),

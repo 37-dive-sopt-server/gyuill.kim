@@ -11,6 +11,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
@@ -20,7 +21,10 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "article")
+@Table(name = "article", indexes = {
+	@Index(name = "idx_article_author", columnList = "author_id"),
+	@Index(name = "idx_article_created_at", columnList = "created_at")
+})
 public class Article extends BaseTimeEntity {
 
 	@Id

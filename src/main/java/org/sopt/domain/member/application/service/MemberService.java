@@ -8,7 +8,6 @@ import org.sopt.domain.member.domain.repository.MemberRepository;
 import org.sopt.domain.member.domain.service.MemberValidator;
 import org.sopt.domain.member.exception.MemberException;
 import org.sopt.global.response.error.ErrorCode;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -36,11 +35,7 @@ public class MemberService {
 		Member member = memberValidator.createValidatedMember(encodedPassword, request.name(), request.birthDate(),
 			request.email(), request.gender());
 
-		try {
-			memberRepository.save(member);
-		} catch (DataIntegrityViolationException e) {
-			throw new MemberException(ErrorCode.DUPLICATE_EMAIL);
-		}
+		memberRepository.save(member);
 
 		return MemberResponse.fromEntity(member);
 	}
